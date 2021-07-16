@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap");
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+
+.container {
+  @apply mx-auto px-4 lg:px-0;
+}
+.btn-dark {
+  @apply bg-dark-900 text-light-100;
+}
+.btn-primary {
+  @apply bg-primary-700 text-dark-900;
+}
+.btn,
+.btn-lg {
+  @apply uppercase;
+}
+.btn {
+  @apply p-4;
+}
+/* .btn-lg{
+    @apply
+} */
+
+* {
+  outline: 0;
+}
