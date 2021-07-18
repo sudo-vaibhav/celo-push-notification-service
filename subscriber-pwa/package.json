@@ -1,10 +1,9 @@
 {
-  "name": "channel-manager-app",
+  "name": "react-tailwind-starter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@celo-tools/use-contractkit": "^1.0.6",
-    "@celo/contractkit": "^1.2.4",
     "@craco/craco": "^6.1.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
