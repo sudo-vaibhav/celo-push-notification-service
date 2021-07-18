@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navbar from "./components/Layout/Navbar";
+import BottomNavigator from "./components/Layout/BottomNavigator";
+import Channels from "./views/Channels";
+import Notifications from "./views/Notifications";
+import Permissions from "./views/Permissions";
 
-const Home = () => {
-  return <div>React tailwind starter</div>;
-};
 const App = () => {
   return (
     <Router>
-      <Navbar />
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Notifications} />
+        <Route path="/permissions" component={Permissions} />
+        <Route path="/channels" component={Channels} />
       </Switch>
+      <BottomNavigator />
     </Router>
   );
 };
