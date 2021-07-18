@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 
 const Navbar = () => {
+  const onDashboard = useRouteMatch("/dashboard");
   return (
     <nav className={"bg-primary-700 shadow-md fixed top-0 left-0 right-0"}>
       <div className="px-4 lg:px-8 flex justify-between py-2 items-center">
@@ -12,7 +13,9 @@ const Navbar = () => {
           </h2>
         </Link>
         <Link to="/dashboard">
-          <button className="btn-dark btn">Go to Dashboard</button>
+          <button className="btn-dark btn">
+            {onDashboard ? "Connect Wallet" : "Go to Dashboard"}
+          </button>
         </Link>
       </div>
     </nav>

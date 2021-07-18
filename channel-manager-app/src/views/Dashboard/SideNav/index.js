@@ -18,7 +18,7 @@ const SideItems = ({ items }) => {
         <SideIcon data={e} />
       </Link>
     ) : (
-      <a href={e.link} target="_blank" rel="noreferrer">
+      <a href={e.link} target="_blank" rel="noreferrer" key={e.text}>
         <SideIcon data={e} />
       </a>
     );
@@ -49,7 +49,7 @@ const SideNav = () => {
             {
               text: "Create Channel",
               icon: "plus-circle",
-              link: "/dashboard/create-channel",
+              link: "/dashboard/channels",
             },
           ]}
         />

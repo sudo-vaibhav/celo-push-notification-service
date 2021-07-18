@@ -32,7 +32,7 @@ const Channels = () => {
                 private and targeted notifications through secrets. No matter
                 what the usecase, CPNS has in something in store for everyone.
               </p>
-              <Link>
+              <Link to="/dashboard/channels">
                 <button className="btn btn-dark">Create a Channel</button>
               </Link>
             </div>

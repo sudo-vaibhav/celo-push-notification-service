@@ -38,6 +38,10 @@ h6 {
     @apply
 } */
 
+.link {
+  @apply text-primary-700 underline;
+}
+
 * {
   outline: 0;
 }

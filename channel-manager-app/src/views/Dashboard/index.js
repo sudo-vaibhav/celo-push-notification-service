@@ -3,6 +3,7 @@ import { MIN_HEIGHT_STRING } from "../../constants";
 import Channels from "./Channels";
 import SideNav from "./SideNav";
 import AddOrEditChannel from "./AddOrEditChannel";
+import NotifyChannel from "./NotifyChannel";
 const Dashboard = () => {
   return (
     <div
@@ -17,11 +18,13 @@ const Dashboard = () => {
           <Route exact path="/dashboard" component={Channels} />
           <Route
             path="/dashboard/channels/:channel?"
+            exact
             component={AddOrEditChannel}
           />
-          {/* <Route path="/channels" component={Channels} />
-              <Route path="/channel/:channelId" component={Channel} />
-            <Route path="/channel/:channelId/edit" component={EditChannel} /> */}
+          <Route
+            path="/dashboard/channels/:channel/notify"
+            component={NotifyChannel}
+          />
         </Switch>
       </div>
     </div>
