@@ -54,7 +54,10 @@ const ChannelsList = () => {
                 <div className="col-span-3 grid grid-cols-2 gap-8 mt-4">
                   {[
                     { text: "Edit", link: "/" },
-                    { text: "Notify", link: "/" },
+                    {
+                      text: "Notify",
+                      link: `/dashboard/channels/${idx}/notify`,
+                    },
                   ].map((e, idx) => {
                     return (
                       <Link to={e.link} key={idx}>

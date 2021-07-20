@@ -14,7 +14,11 @@ const AddOrEditChannel = () => {
             <FormField
               name="name"
               placeholder="Ubeswap"
-              description="The name of your channel that will be shown to the users. Generally this should be the name of your service or company, something which your users are familiar with"
+              description="The name of your channel that will be shown to the users. Generally this should be the name of your service or company, something which your users are familiar with."
+            />
+            <FormField
+              name="description"
+              description="A brief about what value the channel aims to provide in preferably less than 125 characters."
             />
             <FormField
               name="icon"

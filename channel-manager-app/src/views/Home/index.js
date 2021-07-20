@@ -13,8 +13,8 @@ const Home = () => {
         minHeight: MIN_HEIGHT_STRING,
       }}
     >
-      <div className="container grid grid-cols-3 gap-4">
-        <div className="flex flex-col justify-center col-span-2 w-3/4">
+      <div className="container grid lg:grid-cols-3 gap-4 my-8">
+        <div className="flex flex-col justify-center lg:col-span-2 lg:w-3/4 pb-8">
           <h1 className="text-6xl">Bringing WEB3 Out of the Stone Ages</h1>
           <p className="my-6 text-xl">
             WEB3 is revolutionary in every manner, except for how it expects you
@@ -44,7 +44,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="">
           <div className="w-4/5 mx-auto bg-light-100 p-4 text-center">
             <h3 className="text-3xl">Manage Your Channels</h3>
             <img
