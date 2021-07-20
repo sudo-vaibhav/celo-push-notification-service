@@ -35,19 +35,20 @@ contract PushNotifications{
             subscriptions[msg.sender][_channel] == true
         ); // You should be subscribed already, otherwise don't waste gas
         subscriptions[msg.sender][_channel] = false;
+        Channel storage channel = channels[_channel];
         uint256 indexToBeDeleted;
-        for(uint i=0;i<channels[_channel].subscribers.length;i++){
-            if(channels[_channel].subscribers[i] == msg.sender){
+        for(uint i=0;i<channel.subscribers.length;i++){
+            if(channel.subscribers[i] == msg.sender){
                 indexToBeDeleted = i;
                 break;
             }
         }
 
         // replace last element with current element
-        channels[_channel].subscribers[indexToBeDeleted] = channels[_channel].subscribers[channels[_channel].subscribers.length-1];
+        channel.subscribers[indexToBeDeleted] = channel.subscribers[channel.subscribers.length-1];
 
         // remove the last element
-        channels[_channel].subscribers.pop();
+        channel.subscribers.pop();
         return true;
     }
 
@@ -57,16 +58,17 @@ contract PushNotifications{
         string memory _badgeHash
         ) public returns (bool){
         
-        // first increment channelsCount
-        channelsCount += 1;
 
-        // then store
+        // retrieve store
         Channel storage channel = channels[channelsCount];
         channel.name = _name;
         channel.description = _description;
         channel.iconHash = _iconHash;
         channel.badgeHash = _badgeHash;
         channel.admin = msg.sender;
+
+        // first increment channelsCount
+        channelsCount += 1;
         return true;
     }
 
