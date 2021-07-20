@@ -3,17 +3,26 @@ import BottomNavigator from "./components/Layout/BottomNavigator";
 import Channels from "./views/Channels";
 import Notifications from "./views/Notifications";
 import Permissions from "./views/Permissions";
-
+import { ContractKitProvider } from "@celo-tools/use-contractkit";
+import "@celo-tools/use-contractkit/lib/styles.css";
 const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Notifications} />
-        <Route path="/permissions" component={Permissions} />
-        <Route path="/channels" component={Channels} />
-      </Switch>
-      <BottomNavigator />
-    </Router>
+    <ContractKitProvider
+      dapp={{
+        name: "cpns",
+        description: "Bringing the web3 out of the stone age",
+        url: "https://cpns.web.app",
+      }}
+    >
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Notifications} />
+          <Route path="/permissions" component={Permissions} />
+          <Route path="/channels" component={Channels} />
+        </Switch>
+        <BottomNavigator />
+      </Router>
+    </ContractKitProvider>
   );
 };
 

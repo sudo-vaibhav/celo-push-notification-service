@@ -6,26 +6,26 @@ module.exports = {
   },
 
   theme: {
-    fontFamily: {
-      // display: ['Poppins', 'sans-serif'],
-      // body: ['Montserrat', 'sans-serif'],
-    },
-    colors: {
-      primary: {
-        700: "hsl(124, 38%, 61%)", // #78C27D
-      },
-      secondary: {},
-      dark: {
-        900: "#000000",
-      },
-      light: {
-        100: "#ffffff",
-      },
-      transparent: {
-        900: "rgba(1,1,1,0)",
-      },
-    },
     extend: {
+      fontFamily: {
+        // display: ['Poppins', 'sans-serif'],
+        // body: ['Montserrat', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          700: "hsl(124, 38%, 61%)", // #78C27D
+        },
+        secondary: {},
+        dark: {
+          900: "#000000",
+        },
+        light: {
+          100: "#ffffff",
+        },
+        transparent: {
+          900: "rgba(1,1,1,0)",
+        },
+      },
       gridTemplateColumns: {
         18: "repeat(18,minmax(0,1fr))",
       },
