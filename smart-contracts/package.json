@@ -1,0 +1,16 @@
+{
+  "name": "smart-contracts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "faker": "^5.5.3"
+  },
+  "scripts": {
+    "test": "nodemon --exec \"truffle test\""
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "truffle": "^5.4.1"
+  }
+}
