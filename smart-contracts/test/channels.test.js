@@ -51,7 +51,14 @@ contract("PushNotifications", (accounts) => {
       0
     );
     assert.equal(subscriptionStatus, true, "subscription should be successful");
-
+    // also check if subscribers array was updated
+    const subscribers = await pushNotificationsInstance.subscribersInChannel(0);
+    assert.equal(
+      subscribers[0],
+      subscriberAccount,
+      "one subscriber should exist"
+    );
+    assert.equal(subscribers.length, 1, "one subscriber should exist");
     // resubscribing to same channel should fail
     return pushNotificationsInstance.subscribe
       .call(0, {
@@ -68,6 +75,14 @@ contract("PushNotifications", (accounts) => {
         await pushNotificationsInstance.unsubscribe(0, {
           from: subscriberAccount,
         });
+
+        const subscribersCount =
+          await pushNotificationsInstance.subscribersCountInChannel(0);
+        assert.equal(
+          subscribersCount,
+          0,
+          "no subscribers should be present in list"
+        );
 
         // however you shouldn't be able to unsubscibe if you aren't subscribed
         return pushNotificationsInstance.unsubscribe

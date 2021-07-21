@@ -38,7 +38,7 @@ contract PushNotifications{
     mapping (address=>string) public publicKeys; // used for sending notifications privately to one person
 
     function subscribe(uint256 _channel) public returns (bool){
-        require(channels.length > _channel,"channel should exist");
+        require(_channel < channels.length,"channel does not exist");
         require(subscriptions[msg.sender][_channel] != true,"You shouldn't be subscribed already");
         subscriptions[msg.sender][_channel] = true;
         channels[_channel].subscribers.push(msg.sender);
@@ -46,6 +46,7 @@ contract PushNotifications{
     }
 
     function unsubscribe(uint256 _channel) public returns (bool){
+        require(_channel < channels.length,"channel does not exist");
         require(
             subscriptions[msg.sender][_channel] == true,
             "You should be subscribed already"
@@ -91,6 +92,7 @@ contract PushNotifications{
         string memory _badgeHash
         ) 
     public returns (bool){
+        require(_channel < channels.length,"channel does not exist");
         require(msg.sender == channels[_channel].admin,"You must be the channel admin to edit a channel");
         channels[_channel].name = _name;
         channels[_channel].description = _description;
@@ -106,6 +108,7 @@ contract PushNotifications{
 
     // this is useful when you want a notification event to be fireable from a contract, you 
     function setPushAccess(uint256 _channel,address _address,bool _access) public returns (bool){
+        require(_channel < channels.length,"channel does not exist");
         require(msg.sender == channels[_channel].admin,"You must be the channel admin to set push access");
         pushAccess[_channel][_address] = _access;
         return true;
@@ -123,7 +126,7 @@ contract PushNotifications{
         string memory _imageHash,
         bool _privateNotification
     ) public returns (bool){
-        
+        require(_channel < channels.length,"channel does not exist");
         Channel memory channel = channels[_channel];
         // require that the sender is an admin or one of the permissed contracts
         if(_privateNotification){
@@ -151,14 +154,6 @@ contract PushNotifications{
         return true;
     }
 
-    function getSubscribersCountInChannel(uint256 _channel) public view returns (uint256){
-        return channels[_channel].subscribers.length;
-    }
-
-    function getSubscribersInChannel(uint256 _channel) public view returns (address [] memory){
-        return channels[_channel].subscribers;
-    }
-
     function notifyAllInChannel(
         uint256 _channel,
         string memory _title,
@@ -166,6 +161,7 @@ contract PushNotifications{
         string memory _body,
         string memory _imageHash
     ) public returns (bool){
+        require(_channel < channels.length,"channel does not exist");
         Channel memory channel = channels[_channel];
         require(msg.sender == channel.admin,"sender is not admin of channel, channel-wide notifications can only be sent by admin of channel");
 
@@ -178,5 +174,15 @@ contract PushNotifications{
         );
 
         return true;
+    }
+
+    function subscribersCountInChannel(uint256 _channel) public view returns (uint256){
+        require(_channel < channels.length,"channel does not exist");
+        return channels[_channel].subscribers.length;
+    }
+
+    function subscribersInChannel(uint256 _channel) public view returns (address [] memory){
+        require(_channel < channels.length,"channel does not exist");
+        return channels[_channel].subscribers;
     }
 }
