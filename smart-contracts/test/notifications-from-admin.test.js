@@ -1,4 +1,5 @@
 const PushNotifications = artifacts.require("./PushNotifications.sol");
+const truffleAssert = require("truffle-assertions");
 const faker = require("faker");
 const crypto = require("crypto");
 
@@ -184,29 +185,24 @@ contract("PushNotifications", (accounts) => {
       "NotifyOneInChannel should be correctly emitted"
     );
 
-    // should not be able to send an unencrypted notification to the whole channel
-    // if you are not the admin
+        await truffleAssert.reverts(
+          pushNotificationsInstance.notifyAllInChannel(
+            0,
+            notificationTitle,
+            notificationAction,
+            notificationBody,
+            notificationImageHash,
+            {
+              from: otherAccount,
+            }
+          ),
+          "sender is not admin of channel, channel-wide notifications can only be sent by admin of channel"
+        )
+    
 
-    return pushNotificationsInstance.notifyAllInChannel
-      .call(
-        0,
-        notificationTitle,
-        notificationAction,
-        notificationBody,
-        notificationImageHash,
-        {
-          from: otherAccount,
-        }
-      )
-      .then(assert.fail)
-      .catch((error) => {
-        assert(
-          error.toString().indexOf("revert") >= 0,
-          "should not be able to send an unencrypted notification to the whole channel if you are not the admin"
-        );
 
-        return pushNotificationsInstance.notifyOneInChannel
-          .call(
+        await truffleAssert.reverts(
+          pushNotificationsInstance.notifyOneInChannel(
             subscriberAccount,
             0,
             notificationTitle,
@@ -217,54 +213,41 @@ contract("PushNotifications", (accounts) => {
             {
               from: otherAccount,
             }
-          )
-          .then(assert.fail)
-          .catch((error) => {
-            assert(
-              error.toString().indexOf("revert") >= 0,
-              "should not be able to send notification to individual subscribed user if you are not the admin"
-            );
+          ),
+          "public notifications to one person in channel can only be sent by the admin or one of the allowed addresses/contracts"
+        )
 
-            return pushNotificationsInstance.notifyOneInChannel
-              .call(
-                otherAccount,
-                0,
-                notificationTitle,
-                notificationAction,
-                notificationBody,
-                notificationImageHash,
-                false,
-                {
-                  from: adminAccount,
-                }
-              )
-              .then(assert.fail)
-              .catch((error) => {
-                assert(
-                  error.toString().indexOf("revert") >= 0,
-                  "should not be able to send notification to an individual non-subscribed user"
-                );
+        await truffleAssert.reverts(
+          pushNotificationsInstance.notifyOneInChannel(
+            otherAccount,
+            0,
+            notificationTitle,
+            notificationAction,
+            notificationBody,
+            notificationImageHash,
+            false,
+            {
+              from: adminAccount,
+            }
+          ),
+          "recipient should be subscribed to the channel"
+        );
 
-                return pushNotificationsInstance.notifyAllInChannel
-                  .call(
-                    999,
-                    notificationTitle,
-                    notificationAction,
-                    notificationBody,
-                    notificationImageHash,
-                    {
-                      from: adminAccount,
-                    }
-                  )
-                  .then(assert.fail)
-                  .catch((error) => {
-                    assert(
-                      error.toString().indexOf("revert") >= 0,
-                      "should not be able to send notification to a channel which does not exist"
-                    );
-                  });
-              });
-          });
+        await truffleAssert.reverts(
+          pushNotificationsInstance.notifyAllInChannel(
+            999,
+            notificationTitle,
+            notificationAction,
+            notificationBody,
+            notificationImageHash,
+            {
+              from: adminAccount,
+            }
+          ),
+          "channel does not exist"
+        );
       });
-  });
-});
+    })
+
+
+
