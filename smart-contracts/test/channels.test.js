@@ -13,7 +13,7 @@ contract("PushNotifications", (accounts) => {
   beforeEach(async () => {
     pushNotificationsInstance = await PushNotifications.new();
   });
-  it("should be able to allow creation and editing of a channel", async () => {
+  it("should be able to allow creation and editing of a channel and subscribing", async () => {
     await pushNotificationsInstance.createChannel(
       typoChannelName,
       channelDescription,
@@ -32,20 +32,64 @@ contract("PushNotifications", (accounts) => {
       channelDescription,
       channelIconHash,
       channelBadgeHash
-    )
+    );
 
     channel = await pushNotificationsInstance.channels(0);
-    assert.equal(channel.name, channelName, "name should be edited and corrected");
+    assert.equal(
+      channel.name,
+      channelName,
+      "name should be edited and corrected"
+    );
 
+    // testing subscribing to channel
+
+    await pushNotificationsInstance.subscribe(0, {
+      from: subscriberAccount,
+    });
+    const subscriptionStatus = await pushNotificationsInstance.subscriptions(
+      subscriberAccount,
+      0
+    );
+    assert.equal(subscriptionStatus, true, "subscription should be successful");
+
+    // resubscribing to same channel should fail
+    return pushNotificationsInstance.subscribe
+      .call(0, {
+        from: subscriberAccount,
+      })
+      .then(assert.fail)
+      .catch(async (error) => {
+        assert(
+          error.toString().indexOf("revert") >= 0,
+          "resubscribing to the same subscription should not be allowed"
+        );
+
+        // you should be able to unsubscribe from a channel you have already subscribed to
+        await pushNotificationsInstance.unsubscribe(0, {
+          from: subscriberAccount,
+        });
+
+        // however you shouldn't be able to unsubscibe if you aren't subscribed
+        return pushNotificationsInstance.unsubscribe
+          .call(0, {
+            from: subscriberAccount,
+          })
+          .then(assert.fail)
+          .catch((error) => {
+            assert(
+              error.toString().indexOf("revert") >= 0,
+              "unsubscribing from a channel you are not subscribed to should not be allowed"
+            );
+            return pushNotificationsInstance.subscribe
+              .call(999, { from: subscriberAccount })
+              .then(assert.fail)
+              .catch((error) => {
+                assert(
+                  error.toString().indexOf("revert") >= 0,
+                  "subscription should not be allowed for channels that don't exist"
+                );
+              });
+          });
+      });
   });
-
-  /*
-                check if it declares a channels mapping with records
-                
-                check if a person who's subscribed already isn't able to subscribe again
-
-                should not be able to send private notification for a person who does not have a published public key
-
-                
-            */
 });

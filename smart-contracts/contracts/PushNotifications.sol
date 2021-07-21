@@ -48,7 +48,7 @@ contract PushNotifications{
     function unsubscribe(uint256 _channel) public returns (bool){
         require(
             subscriptions[msg.sender][_channel] == true,
-            "You should be subscribed already, otherwise don't waste gas"
+            "You should be subscribed already"
         ); 
         subscriptions[msg.sender][_channel] = false;
         Channel storage channel = channels[_channel];
@@ -67,19 +67,6 @@ contract PushNotifications{
         channel.subscribers.pop();
         return true;
     }
-
-    function setPublicKey(string memory _publicKey) public returns (bool){
-        publicKeys[msg.sender] = _publicKey;
-        return true;
-    }
-
-    // this is useful when you want a notification event to be fireable from a contract, you 
-    function setPushAccess(uint256 _channel,address _address,bool _access) public returns (bool){
-        require(msg.sender == channels[_channel].admin,"You must be the channel admin to set push access");
-        pushAccess[_channel][_address] = _access;
-        return true;
-    }
-
     function createChannel(
         string memory _name,
         string memory _description,
@@ -109,6 +96,18 @@ contract PushNotifications{
         channels[_channel].description = _description;
         channels[_channel].iconHash = _iconHash;
         channels[_channel].badgeHash = _badgeHash;
+        return true;
+    }
+
+    function setPublicKey(string memory _publicKey) public returns (bool){
+        publicKeys[msg.sender] = _publicKey;
+        return true;
+    }
+
+    // this is useful when you want a notification event to be fireable from a contract, you 
+    function setPushAccess(uint256 _channel,address _address,bool _access) public returns (bool){
+        require(msg.sender == channels[_channel].admin,"You must be the channel admin to set push access");
+        pushAccess[_channel][_address] = _access;
         return true;
     }
 
@@ -152,7 +151,15 @@ contract PushNotifications{
         return true;
     }
 
-    function notifyAll(
+    function getSubscribersCountInChannel(uint256 _channel) public view returns (uint256){
+        return channels[_channel].subscribers.length;
+    }
+
+    function getSubscribersInChannel(uint256 _channel) public view returns (address [] memory){
+        return channels[_channel].subscribers;
+    }
+
+    function notifyAllInChannel(
         uint256 _channel,
         string memory _title,
         string memory _action, 
