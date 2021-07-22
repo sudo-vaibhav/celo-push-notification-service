@@ -163,7 +163,7 @@ contract PushNotifications{
     ) public returns (bool){
         require(_channel < channels.length,"channel does not exist");
         Channel memory channel = channels[_channel];
-        require(msg.sender == channel.admin,"sender is not admin of channel, channel-wide notifications can only be sent by admin of channel");
+        require(msg.sender == channel.admin || pushAccess[_channel][msg.sender] == true,"sender is not admin of channel or one of the other addresses who have push access");
 
         emit NotifyAllInChannel(
             _channel,

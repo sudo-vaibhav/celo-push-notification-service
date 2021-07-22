@@ -17,9 +17,6 @@ const encrypt = (data, publicKey) => {
 };
 
 contract("PushNotifications", (accounts) => {
-  const primeLength = 1024;
-  const diffHell = crypto.createDiffieHellman(primeLength);
-  diffHell.generateKeys("base64");
   const { publicKey } = crypto.generateKeyPairSync("rsa", {
     modulusLength: 2048,
   });
@@ -32,7 +29,6 @@ contract("PushNotifications", (accounts) => {
   channelDescription = "The official Ubeswap channel.";
   channelIconHash = faker.internet.password(46, false, /[0-9A-Za-z]/);
   channelBadgeHash = faker.internet.password(46, false, /[0-9A-Za-z]/);
-  subscriberPublicKey = faker.internet.password(172, false);
 
   notificationTitle = "The swap fees has increased by 5%";
   notificationAction = "https://app.ubeswap.org/";
@@ -62,7 +58,7 @@ contract("PushNotifications", (accounts) => {
     await pushNotificationsInstance.subscribe(0, { from: subscriberAccount });
 
     // try publishing public key of user
-    await pushNotificationsInstance.setPublicKey(subscriberPublicKey, {
+    await pushNotificationsInstance.setPublicKey(publicKey, {
       from: subscriberAccount,
     });
 
@@ -185,69 +181,64 @@ contract("PushNotifications", (accounts) => {
       "NotifyOneInChannel should be correctly emitted"
     );
 
-        await truffleAssert.reverts(
-          pushNotificationsInstance.notifyAllInChannel(
-            0,
-            notificationTitle,
-            notificationAction,
-            notificationBody,
-            notificationImageHash,
-            {
-              from: otherAccount,
-            }
-          ),
-          "sender is not admin of channel, channel-wide notifications can only be sent by admin of channel"
-        )
-    
+    await truffleAssert.reverts(
+      pushNotificationsInstance.notifyAllInChannel(
+        0,
+        notificationTitle,
+        notificationAction,
+        notificationBody,
+        notificationImageHash,
+        {
+          from: otherAccount,
+        }
+      ),
+      "sender is not admin of channel or one of the other addresses who have push access"
+    );
 
+    await truffleAssert.reverts(
+      pushNotificationsInstance.notifyOneInChannel(
+        subscriberAccount,
+        0,
+        notificationTitle,
+        notificationAction,
+        notificationBody,
+        notificationImageHash,
+        false,
+        {
+          from: otherAccount,
+        }
+      ),
+      "public notifications to one person in channel can only be sent by the admin or one of the allowed addresses/contracts"
+    );
 
-        await truffleAssert.reverts(
-          pushNotificationsInstance.notifyOneInChannel(
-            subscriberAccount,
-            0,
-            notificationTitle,
-            notificationAction,
-            notificationBody,
-            notificationImageHash,
-            false,
-            {
-              from: otherAccount,
-            }
-          ),
-          "public notifications to one person in channel can only be sent by the admin or one of the allowed addresses/contracts"
-        )
+    await truffleAssert.reverts(
+      pushNotificationsInstance.notifyOneInChannel(
+        otherAccount,
+        0,
+        notificationTitle,
+        notificationAction,
+        notificationBody,
+        notificationImageHash,
+        false,
+        {
+          from: adminAccount,
+        }
+      ),
+      "recipient should be subscribed to the channel"
+    );
 
-        await truffleAssert.reverts(
-          pushNotificationsInstance.notifyOneInChannel(
-            otherAccount,
-            0,
-            notificationTitle,
-            notificationAction,
-            notificationBody,
-            notificationImageHash,
-            false,
-            {
-              from: adminAccount,
-            }
-          ),
-          "recipient should be subscribed to the channel"
-        );
-
-        await truffleAssert.reverts(
-          pushNotificationsInstance.notifyAllInChannel(
-            999,
-            notificationTitle,
-            notificationAction,
-            notificationBody,
-            notificationImageHash,
-            {
-              from: adminAccount,
-            }
-          ),
-          "channel does not exist"
-        );
-      });
-    })
-
-
-
+    await truffleAssert.reverts(
+      pushNotificationsInstance.notifyAllInChannel(
+        999,
+        notificationTitle,
+        notificationAction,
+        notificationBody,
+        notificationImageHash,
+        {
+          from: adminAccount,
+        }
+      ),
+      "channel does not exist"
+    );
+  });
+});
