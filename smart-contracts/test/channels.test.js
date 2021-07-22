@@ -26,6 +26,12 @@ contract("PushNotifications", (accounts) => {
     let channel = await pushNotificationsInstance.channels(0);
     assert.equal(channel.name, typoChannelName, "correct channel created");
 
+    assert.equal(
+      (await pushNotificationsInstance.allChannels()).length,
+      1,
+      "all channels array should also have only one channel"
+    );
+
     await pushNotificationsInstance.editChannel(
       0,
       channelName,

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma experimental ABIEncoderV2;
+// pragma solidity >=0.4.22 <0.9.0;
 
 contract PushNotifications{
     event NotifyOneInChannel(
@@ -184,5 +185,9 @@ contract PushNotifications{
     function subscribersInChannel(uint256 _channel) public view returns (address [] memory){
         require(_channel < channels.length,"channel does not exist");
         return channels[_channel].subscribers;
+    }
+
+    function allChannels() public view returns (Channel[] memory){
+        return channels;
     }
 }
