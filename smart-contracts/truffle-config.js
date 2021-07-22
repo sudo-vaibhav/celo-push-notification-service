@@ -24,6 +24,33 @@
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
+const fs = require("fs");
+const path = require("path");
+const Web3 = require("web3");
+const ContractKit = require("@celo/contractkit");
+
+const filePath = path.join(__dirname, "./.secret");
+const web3 = new Web3("https://alfajores-forno.celo-testnet.org");
+
+function getAccount() {
+  return new Promise((resolve) => {
+    if (fs.existsSync(filePath)) {
+      fs.readFile(filePath, { encoding: "utf-8" }, (err, data) => {
+        resolve(web3.eth.accounts.privateKeyToAccount(data));
+      });
+    }
+  });
+}
+
+const kit = ContractKit.newKitFromWeb3(web3);
+
+async function awaitWrapper() {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+}
+
+awaitWrapper();
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -72,6 +99,15 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    alfajores: {
+      provider: kit.connection.web3.currentProvider,
+      network_id: 44787, // Alfajores's id
+      from: "0x93a8Ba9652a4dBF28709A15e58378828D54feAEE",
+      gas: 5500000,
+      confirmations: 2, // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: false, // Skip dry run before migrations? (default: false for public nets )
+    },
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -91,7 +127,7 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
@@ -101,6 +137,6 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
 
   db: {
-    enabled: false
-  }
+    enabled: false,
+  },
 };

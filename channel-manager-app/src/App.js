@@ -10,9 +10,9 @@ function App() {
     <Router>
       <ContractKitProvider
         dapp={{
-          name: "My awesome dApp",
-          description: "My awesome description",
-          url: "https://example.com",
+          name: "CPNS Admin Panel",
+          description: "panel for managing all your channels",
+          url: "https://cpns-dashboard.web.app",
         }}
       >
         <Navbar />
