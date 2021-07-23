@@ -4,6 +4,9 @@ import { ContractKitProvider } from "@celo-tools/use-contractkit";
 import { ALLOWED_NETWORK, HEADER_MARGIN_TOP } from "./constants";
 import Dashboard from "./views/Dashboard";
 import Home from "./views/Home";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "@celo-tools/use-contractkit/lib/styles.css";
 function App() {
   return (
@@ -27,6 +30,7 @@ function App() {
             <Route path="/dashboard" component={Dashboard} />
           </Switch>
         </div>
+        <ToastContainer position="bottom-right" />
       </ContractKitProvider>
     </Router>
   );

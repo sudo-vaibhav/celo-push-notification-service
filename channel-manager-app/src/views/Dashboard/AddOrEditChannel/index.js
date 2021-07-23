@@ -1,7 +1,9 @@
 import { Formik, Form } from "formik";
 import FormField from "../../../components/Forms/FormField";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import useContract from "../../../components/hooks/useContract";
+import { toast } from "react-toastify";
 
 const ChannelSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -11,6 +13,9 @@ const ChannelSchema = Yup.object().shape({
 });
 const AddOrEditChannel = () => {
   const { channel } = useParams();
+  const { contract, account } = useContract();
+  let history = useHistory();
+  // const [working, setWorking] = useState(false);
   return (
     <div>
       <div className="container my-4">
@@ -22,15 +27,54 @@ const AddOrEditChannel = () => {
             badgeHash: "",
           }}
           validationSchema={ChannelSchema}
-          onSubmit={(values) => {
-            if (channel) {
-              // already existent channel
-            } else {
-              // new channel
+          onSubmit={(values, { setSubmitting }) => {
+            try {
+              console.log("contract", contract);
+              if (channel) {
+                // already existent channel
+                // await contract.methods.editChannel(
+                //   parseInt(channel),
+                //   values.name,
+                //   values.description,
+                //   values.iconHash,
+                //   values.badgeHash
+                // );
+              } else {
+                console.log("new channel");
+                // new channel
+                contract.methods
+                  .createChannel(
+                    values.name,
+                    values.description,
+                    values.iconHash,
+                    values.badgeHash
+                  )
+                  .send({
+                    from: account,
+                  })
+                  .on("receipt", () => {
+                    setSubmitting(false);
+                    toast.success("Channel created successfully!");
+                    history.push("/dashboard");
+                  });
+              }
+            } catch (e) {
+              toast.error("Could not create channel. Please try again.");
+              setSubmitting(false);
             }
+            // }
+            //   )();
+            console.log("submitting", values);
           }}
         >
-          {({ values, setValues, errors, touched, setTouched }) => {
+          {({
+            values,
+            setValues,
+            errors,
+            touched,
+            setTouched,
+            isSubmitting,
+          }) => {
             return (
               <Form className="grid gap-8">
                 <FormField
@@ -46,6 +90,7 @@ const AddOrEditChannel = () => {
                 />
                 <FormField
                   name="iconHash"
+                  label="Icon"
                   type="file"
                   error={errors.iconHash}
                   values={values}
@@ -55,6 +100,7 @@ const AddOrEditChannel = () => {
                 />
                 <FormField
                   name="badgeHash"
+                  label="Badge"
                   type="file"
                   error={errors.badgeHash}
                   values={values}
@@ -62,8 +108,12 @@ const AddOrEditChannel = () => {
                   setTouched={setTouched}
                   description="A square image (min 96x96 pixels). This badge will show when notification is minimized. For example: on Android phones, this badge will appear on notifications bar if notifications panel is not open."
                 />
-                <button type="submit" className="btn btn-primary">
-                  Save
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Save"}
                 </button>
               </Form>
             );

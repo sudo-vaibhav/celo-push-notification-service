@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useContract from "../../../../components/hooks/useContract";
+import getInfuraUrl from "../../../../utils/getInfuraUrl";
 import noChannelsImage from "./no-channels.svg";
-import ubeswap from "./ubeswap.svg";
 
 const NoChannels = () => {
   return (
@@ -20,14 +20,17 @@ const NoChannels = () => {
 };
 const ChannelsList = () => {
   const [myChannels, setMyChannels] = useState([]);
-
-  useContract(async ({ contract, account }) => {
-    const channels = (await contract.methods.allChannels().call()).filter(
-      (e) => e.admin === account
-    );
-    console.log(channels);
-    setMyChannels(channels);
-  });
+  const { contract, account } = useContract();
+  useEffect(() => {
+    (async () => {
+      if (contract) {
+        const channels = (await contract.methods.allChannels().call())
+          .map((e, idx) => ({ id: idx, ...e }))
+          .filter((e) => e.admin === account);
+        setMyChannels(channels);
+      }
+    })();
+  }, [contract, account]);
 
   return (
     <div className="mb-16">
@@ -36,22 +39,25 @@ const ChannelsList = () => {
         <NoChannels />
       ) : (
         <div className="grid grid-cols-2 gap-4">
-          {myChannels.map((_, idx) => {
+          {myChannels.map((channel, idx) => {
             return (
               <div
                 key={idx}
                 className="border border-primary-700 rounded-lg p-4 grid grid-cols-3"
               >
                 <div className="col-span-2 text-2xl  flex items-center">
-                  Ubeswap
+                  {channel.name}
                 </div>
                 <div>
-                  <img src={ubeswap} alt="channel" className="pb-4" />
+                  <img
+                    src={getInfuraUrl(channel.iconHash)}
+                    alt="channel"
+                    className="pb-4"
+                  />
                 </div>
                 <div className="col-span-3">
                   {[
-                    { field: "Subscribers", value: "12879" },
-                    { field: "Notifications Sent", value: "500k" },
+                    { field: "Subscribers", value: channel.subscribers.length },
                   ].map((e, idx) => {
                     return (
                       <div
@@ -66,10 +72,10 @@ const ChannelsList = () => {
                 </div>
                 <div className="col-span-3 grid grid-cols-2 gap-8 mt-4">
                   {[
-                    { text: "Edit", link: "/" },
+                    { text: "Edit", link: "/dashboard/channels/" + channel.id },
                     {
                       text: "Notify",
-                      link: `/dashboard/channels/${idx}/notify`,
+                      link: `/dashboard/channels/${channel.id}/notify`,
                     },
                   ].map((e, idx) => {
                     return (

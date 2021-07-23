@@ -42,3 +42,11 @@ h6 {
 * {
   outline: 0;
 }
+
+.Toastify__toast--error {
+  @apply bg-red-600 !important;
+}
+
+.Toastify__toast--success {
+  @apply bg-primary-700 text-dark-900 !important;
+}
