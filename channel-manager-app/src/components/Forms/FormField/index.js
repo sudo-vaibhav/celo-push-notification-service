@@ -1,5 +1,5 @@
-import imagePickerImage from "./image-picker.svg";
 import { Field } from "formik";
+import FilePicker from "./FilePicker";
 const useLabelText = (str) => {
   // adding space between strings
   const result = str.replace(/([A-Z])/g, " $1");
@@ -32,14 +32,7 @@ const FormField = ({
             className="border-b border-primary-700 py-2 w-full"
           />
         ) : type === "file" ? (
-          <div className="border border-dashed border-primary-700 rounded-lg p-4 text-center text-primary-700">
-            <img
-              src={imagePickerImage}
-              alt="file-picker"
-              className="w-1/4 mx-auto"
-            />
-            <p>Click here or drop an image</p>
-          </div>
+          <FilePicker values={values} setValues={setValues} name={name} />
         ) : type === "radio" ? (
           <div className="flex">
             {options.map((option) => {
@@ -48,7 +41,7 @@ const FormField = ({
                 <div
                   key={option}
                   onClick={() => {
-                    setValues({ [name]: option });
+                    setValues((values) => ({ ...values, [name]: option }));
                   }}
                   className={
                     "py-2 px-4 m-2 cursor-pointer uppercase flex items-center " +

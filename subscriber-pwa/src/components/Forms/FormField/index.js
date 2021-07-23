@@ -48,7 +48,7 @@ const FormField = ({
                 <div
                   key={option}
                   onClick={() => {
-                    setValues({ [name]: option });
+                    setValues((values) => ({ ...values, [name]: option }));
                   }}
                   className={
                     "py-2 px-4 m-2 cursor-pointer uppercase flex items-center " +
