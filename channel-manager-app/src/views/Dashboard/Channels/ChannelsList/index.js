@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import { useContractKit } from "@celo-tools/use-contractkit";
-import PushNotificationContract from "../../../../contract/PushNotifications.json";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import useContract from "../../../../components/hooks/useContract";
 import noChannelsImage from "./no-channels.svg";
 import ubeswap from "./ubeswap.svg";
-import { ALLOWED_NETWORK } from "../../../../constants";
 
 const NoChannels = () => {
   return (
@@ -14,29 +12,22 @@ const NoChannels = () => {
         className="md:w-1/3 lg:w-1/4 mx-auto"
         alt="no-channel"
       />
-      <p>No channels found. Did you connect with the correct network (Alfajores)?</p>
+      <p>
+        No channels found. Did you connect with the correct network (Alfajores)?
+      </p>
     </div>
   );
 };
 const ChannelsList = () => {
   const [myChannels, setMyChannels] = useState([]);
 
-  const { performActions, account } = useContractKit();
-  useEffect(() => {
-    (async () => {
-      await performActions(async (kit) => {
-        console.log("fetching channels")
-        const contract = new kit.web3.eth.Contract(
-          PushNotificationContract.abi,
-          PushNotificationContract.networks[ALLOWED_NETWORK.chainId].address
-        );
-
-        const channels = (await contract.methods.allChannels().call()).filter(e=>e.admin === account);
-          setMyChannels(channels)
-      });
-    })();
-  }, [account,performActions]);
-
+  useContract(async ({ contract, account }) => {
+    const channels = (await contract.methods.allChannels().call()).filter(
+      (e) => e.admin === account
+    );
+    console.log(channels);
+    setMyChannels(channels);
+  });
 
   return (
     <div className="mb-16">

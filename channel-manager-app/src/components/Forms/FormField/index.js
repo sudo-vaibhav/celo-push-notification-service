@@ -18,13 +18,16 @@ const FormField = ({
   type = "text",
   options = [],
   setValues,
+  setTouched,
+  error,
   values,
 }) => {
   const titleCasedName = useLabelText(name);
   return (
     <div className="">
       <label className="text-xl ">{label || titleCasedName}</label>
-      <div className="grid lg:grid-cols-2 gap-4 pt-4">
+      {error && <div className="text-red-600">{error}</div>}
+      <div className="grid lg:grid-cols-2 gap-4 pt-2">
         {type === "text" ? (
           <Field
             name={name}
@@ -32,7 +35,12 @@ const FormField = ({
             className="border-b border-primary-700 py-2 w-full"
           />
         ) : type === "file" ? (
-          <FilePicker values={values} setValues={setValues} name={name} />
+          <FilePicker
+            values={values}
+            setValues={setValues}
+            name={name}
+            setTouched={setTouched}
+          />
         ) : type === "radio" ? (
           <div className="flex">
             {options.map((option) => {

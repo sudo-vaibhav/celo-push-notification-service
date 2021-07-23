@@ -3,7 +3,7 @@ import { FileDrop } from "react-file-drop";
 import { create } from "ipfs-http-client";
 
 import defaultPickerImage from "./file-picker-default.svg";
-const FilePicker = ({ setValues, values, name }) => {
+const FilePicker = ({ setValues, values, name, setTouched }) => {
   const fileInputRef = useRef(null);
   const [processing, setProcessing] = useState(false);
   const ipfs = create({
@@ -17,7 +17,7 @@ const FilePicker = ({ setValues, values, name }) => {
   };
   const handleFileChange = async (files) => {
     setProcessing(true);
-
+    setTouched((touched) => ({ ...touched, [name]: true }));
     try {
       console.log("received file drop");
       const reader = new window.FileReader();
@@ -39,7 +39,6 @@ const FilePicker = ({ setValues, values, name }) => {
       setProcessing(false);
     }
   };
-  console.log(values[name]);
   const previewFileSource =
     values[name] === ""
       ? defaultPickerImage
