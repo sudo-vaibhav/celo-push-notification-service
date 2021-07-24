@@ -9177,6 +9177,11 @@ jsdom@^16.4.0:
     ws "^7.4.5"
     xml-name-validator "^3.0.0"
 
+jsencrypt@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/jsencrypt/-/jsencrypt-3.2.0.tgz#09242aabf1984165dcd7698fe6ed163be77c05f8"
+  integrity sha512-Y/WBrCYRP1A2I1OEXxqurO+W3AC5uXhiArprpYQ0Y8/1Dc3NaiINAyCLx7HzXGwN7xvW3s5xpeOTdwD7lD1SQQ==
+
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"

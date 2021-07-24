@@ -27,7 +27,7 @@ const ChannelsList = () => {
         const channels = (await contract.methods.allChannels().call())
           .map((e, idx) => ({ id: idx, ...e }))
           .filter((e) => e.admin === account);
-        console.log(channels);
+
         setMyChannels(channels);
       }
     })();

@@ -4,18 +4,26 @@ import * as Yup from "yup";
 import useContract from "../../../components/hooks/useContract";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { MAX_ENCRYPTED_FIELD_SIZE } from "../../../constants";
+import { ENCRYPT_OPTIONS, MAX_FIELD_SIZE } from "../../../constants";
+import JSEncrypt from "jsencrypt";
+
 const NotifySchema = Yup.object().shape({
-  title: Yup.string().required("title of the notification is required."),
-  action: Yup.string().url().required("action url is required."),
-  body: Yup.string().required("body is required."),
-  imageHash: Yup.string().required("image is required."),
+  title: Yup.string()
+    .max(MAX_FIELD_SIZE)
+    .required("title of the notification is required."),
+  action: Yup.string()
+    .url()
+    .max(MAX_FIELD_SIZE)
+    .required("action url is required."),
+  body: Yup.string().max(MAX_FIELD_SIZE).required("body is required."),
+  imageHash: Yup.string().max(MAX_FIELD_SIZE),
   recipientsType: Yup.string().required("recipientsType is required."),
 });
 
 const NotifyChannel = () => {
   const { contract, account } = useContract();
   const { channel } = useParams<{ channel: string }>();
+
   return (
     <div>
       <div className="container my-4">
@@ -30,72 +38,107 @@ const NotifyChannel = () => {
             private: "no",
           }}
           validationSchema={NotifySchema}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting }) => {
             console.log(values);
             let channelId = parseInt(channel);
-
-            try {
-              if (values.recipientsType === "everyone") {
-                // broadcast to everyone
-                contract!.methods
-                  .notifyAllInChannel(
-                    channelId,
-                    values.title,
-                    values.action,
-                    values.body,
-                    values.imageHash
-                  )
-                  .send({
-                    from: account,
-                  })
-                  .on("receipt", () => {
-                    setSubmitting(false);
-                    toast.success("Notification(s) queued");
-                  });
-              } else {
-                // one person
-                const privateNotification = values.private === "yes";
-
-                // if notification is private it has to be encrypted first
-                if (privateNotification) {
+            return new Promise(async (resolve, reject) => {
+              try {
+                if (values.recipientsType === "everyone") {
+                  // broadcast to everyone
                   contract!.methods
-                    .publicKeys(values.recipient)
-                    .call()
-                    .then((publicKey: string) => {
-                      if (publicKey) {
-                        const encryptedFields = {};
-                      } else {
-                        throw new Error(
-                          "Public Key not published by recipient"
-                        );
+                    .notifyAllInChannel(
+                      channelId,
+                      values.title,
+                      values.action,
+                      values.body,
+                      values.imageHash
+                    )
+                    .send({
+                      from: account,
+                    })
+                    .on("receipt", () => {
+                      toast.success("Notification(s) queued");
+                      resolve(true);
+                    });
+                } else {
+                  // one person
+                  const privateNotification = values.private === "yes";
+                  let encryptedFields: {
+                    title?: string | false;
+                    body?: string | false;
+                    action?: string | false;
+                    imageHash?: string | false;
+                  } = {};
+                  // if notification is private it has to be encrypted first
+                  if (privateNotification) {
+                    const publicKey = (await contract!.methods
+                      .publicKeys(values.recipient)
+                      .call()) as string;
+                    if (publicKey) {
+                      const encrypt = new JSEncrypt(ENCRYPT_OPTIONS);
+                      encrypt.setPublicKey(publicKey);
+                      encryptedFields = {
+                        title: encrypt.encrypt(values.title),
+                        action: encrypt.encrypt(values.action),
+                        body: encrypt.encrypt(values.body),
+                        imageHash: encrypt.encrypt(values.imageHash),
+                      };
+                      if (
+                        !Object.values(encryptedFields).every(
+                          (e) => e !== false
+                        )
+                      ) {
+                        throw new Error("field size overflow");
                       }
+                    } else {
+                      throw new Error("Public Key not published by recipient");
+                    }
+                  }
+                  contract!.methods
+                    .notifyOneInChannel(
+                      values.recipient,
+                      channelId,
+                      ...(privateNotification
+                        ? [
+                            encryptedFields.title,
+                            encryptedFields.action,
+                            encryptedFields.body,
+                            encryptedFields.imageHash,
+                          ]
+                        : [
+                            values.title,
+                            values.action,
+                            values.body,
+                            values.imageHash,
+                          ]),
+                      privateNotification
+                    )
+                    .send({
+                      from: account,
+                    })
+                    .on("receipt", () => {
+                      toast.success("Notification(s) queued");
+                      resolve(true);
                     });
                 }
-                contract!.methods
-                  .notifyOneInChannel(
-                    values.recipient,
-                    channelId,
-                    values.title,
-                    values.action,
-                    values.body,
-                    values.imageHash,
-                    privateNotification
-                  )
-                  .send({
-                    from: account,
-                  })
-                  .on("receipt", () => {
-                    setSubmitting(false);
-                    toast.success("Notification(s) queued");
-                  });
+              } catch (e) {
+                console.log(e);
+                toast.error(
+                  "Could not send notification(s)! Please try again. Have you picked the recipients properly?"
+                );
+                resolve(true);
               }
-            } catch (e) {
-              toast.error("Could not send notification(s)! Please try again.");
-              setSubmitting(false);
-            }
+            });
           }}
         >
-          {({ setValues, values, errors, touched, setTouched }) => {
+          {({
+            setValues,
+            values,
+            errors,
+            touched,
+            setTouched,
+            isSubmitting,
+          }) => {
             return (
               <Form className="grid gap-8">
                 <FormField
@@ -152,8 +195,12 @@ const NotifyChannel = () => {
                     />
                   </>
                 )}
-                <button className="btn btn-primary">
-                  send notification(s)
+                <button
+                  className="btn btn-primary"
+                  disabled={isSubmitting}
+                  type="submit"
+                >
+                  {isSubmitting ? "Sending..." : "send notification(s)"}
                 </button>
               </Form>
             );
