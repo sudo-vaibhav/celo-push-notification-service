@@ -1,7 +1,10 @@
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import FormField from "../../../components/Forms/FormField";
 import * as Yup from "yup";
-
+import useContract from "../../../components/hooks/useContract";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import { MAX_ENCRYPTED_FIELD_SIZE } from "../../../constants";
 const NotifySchema = Yup.object().shape({
   title: Yup.string().required("title of the notification is required."),
   action: Yup.string().url().required("action url is required."),
@@ -11,6 +14,8 @@ const NotifySchema = Yup.object().shape({
 });
 
 const NotifyChannel = () => {
+  const { contract, account } = useContract();
+  const { channel } = useParams<{ channel: string }>();
   return (
     <div>
       <div className="container my-4">
@@ -21,12 +26,73 @@ const NotifyChannel = () => {
             action: "",
             body: "",
             recipientsType: "everyone",
-            receipientsString: "",
-            private: "false",
+            recipient: "",
+            private: "no",
           }}
           validationSchema={NotifySchema}
-          onSubmit={(values) => {
+          onSubmit={(values, { setSubmitting }) => {
             console.log(values);
+            let channelId = parseInt(channel);
+
+            try {
+              if (values.recipientsType === "everyone") {
+                // broadcast to everyone
+                contract!.methods
+                  .notifyAllInChannel(
+                    channelId,
+                    values.title,
+                    values.action,
+                    values.body,
+                    values.imageHash
+                  )
+                  .send({
+                    from: account,
+                  })
+                  .on("receipt", () => {
+                    setSubmitting(false);
+                    toast.success("Notification(s) queued");
+                  });
+              } else {
+                // one person
+                const privateNotification = values.private === "yes";
+
+                // if notification is private it has to be encrypted first
+                if (privateNotification) {
+                  contract!.methods
+                    .publicKeys(values.recipient)
+                    .call()
+                    .then((publicKey: string) => {
+                      if (publicKey) {
+                        const encryptedFields = {};
+                      } else {
+                        throw new Error(
+                          "Public Key not published by recipient"
+                        );
+                      }
+                    });
+                }
+                contract!.methods
+                  .notifyOneInChannel(
+                    values.recipient,
+                    channelId,
+                    values.title,
+                    values.action,
+                    values.body,
+                    values.imageHash,
+                    privateNotification
+                  )
+                  .send({
+                    from: account,
+                  })
+                  .on("receipt", () => {
+                    setSubmitting(false);
+                    toast.success("Notification(s) queued");
+                  });
+              }
+            } catch (e) {
+              toast.error("Could not send notification(s)! Please try again.");
+              setSubmitting(false);
+            }
           }}
         >
           {({ setValues, values, errors, touched, setTouched }) => {
@@ -70,18 +136,21 @@ const NotifyChannel = () => {
                   values={values}
                 />
                 {values.recipientsType === "one subscriber" && (
-                  <div>
-                    <div>
-                      Enter the addresses of people whom you want to notify (one
-                      address per line)
-                    </div>
-                    <Field
-                      name="receipientsString"
-                      as="textarea"
-                      spellCheck={false}
-                      className="w-full lg:w-1/2 border border-primary-700 rounded-lg mt-4 p-4"
+                  <>
+                    <FormField
+                      name="recipient"
+                      label="Enter the addresses of subscriber whom you want to notify"
                     />
-                  </div>
+                    <FormField
+                      name="private"
+                      label="Send Privately?"
+                      type="radio"
+                      description="For private notification to work, recipient must have a published public key on chain"
+                      options={["yes", "no"]}
+                      setValues={setValues}
+                      values={values}
+                    />
+                  </>
                 )}
                 <button className="btn btn-primary">
                   send notification(s)

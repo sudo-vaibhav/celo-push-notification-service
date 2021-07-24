@@ -1,6 +1,6 @@
 import { Field } from "formik";
 import FilePicker from "./FilePicker";
-const useLabelText = (str) => {
+const useLabelText = (str: string) => {
   // adding space between strings
   const result = str.replace(/([A-Z])/g, " $1");
 
@@ -13,6 +13,8 @@ const useLabelText = (str) => {
 const FormField = ({
   name,
   label = "",
+  as = "text",
+  spellCheck = false,
   placeholder = "",
   description = "",
   type = "text",
@@ -21,6 +23,19 @@ const FormField = ({
   setTouched,
   error,
   values,
+}: {
+  name: string;
+  label?: string;
+  as?: string;
+  spellCheck?: boolean;
+  placeholder?: string;
+  description?: string;
+  type?: string;
+  options?: any[];
+  setValues?: any;
+  setTouched?: any;
+  error?: string | false;
+  values?: any;
 }) => {
   const titleCasedName = useLabelText(name);
   return (
@@ -49,7 +64,8 @@ const FormField = ({
                 <div
                   key={option}
                   onClick={() => {
-                    setValues((values) => ({ ...values, [name]: option }));
+                    // @ts-ignore
+                    setValues!((values) => ({ ...values, [name]: option }));
                   }}
                   className={
                     "py-2 px-4 m-2 cursor-pointer uppercase flex items-center " +
