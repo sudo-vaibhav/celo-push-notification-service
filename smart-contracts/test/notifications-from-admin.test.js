@@ -57,11 +57,20 @@ contract("PushNotifications", (accounts) => {
 
     await pushNotificationsInstance.subscribe(0, { from: subscriberAccount });
 
+    const stringifiedPublicKey = publicKey.export({
+      format: "pem",
+      type: "pkcs1",
+    });
     // try publishing public key of user
-    await pushNotificationsInstance.setPublicKey(publicKey, {
+    await pushNotificationsInstance.setPublicKey(stringifiedPublicKey, {
       from: subscriberAccount,
     });
 
+    assert.equal(
+      await pushNotificationsInstance.publicKeys(subscriberAccount),
+      stringifiedPublicKey,
+      "public key should be published on chain"
+    );
     // should be able to send an unencrypted notification to the whole channel
     receipt = await pushNotificationsInstance.notifyAllInChannel(
       0,
