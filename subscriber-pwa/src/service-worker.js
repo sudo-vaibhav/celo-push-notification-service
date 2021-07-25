@@ -71,3 +71,31 @@ self.addEventListener("message", (event) => {
 });
 
 // Any other custom service worker logic can go here.
+self.addEventListener("push", (event) => {
+  const notifcationOptions = { title: "PrishaPolicy" };
+  if (event.data) {
+    notifcationOptions.message = event.data.text();
+    try {
+      const notificationData = event.data.json();
+      notifcationOptions.title = notificationData.title;
+      notifcationOptions.message = notificationData.message;
+    } catch (error) {
+      console.error("Error processing notification data", error);
+    }
+  }
+  event.waitUntil(
+    self.registration.showNotification(notifcationOptions.title, {
+      vibrate: [200, 100, 200, 100, 200, 100, 400],
+      icon: "https://raw.githubusercontent.com/PrishaPolicy/public-assets/main/square-icon.png",
+      body: notifcationOptions.message
+        ? notifcationOptions.message
+        : "Check out what's changed while you were gone!",
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = "https://www.prishapolicy.com";
+  clients.openWindow(url);
+});
