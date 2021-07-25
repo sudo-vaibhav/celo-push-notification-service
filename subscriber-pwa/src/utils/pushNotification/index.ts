@@ -14,7 +14,6 @@ export const urlBase64ToUint8Array = (base64String: string) => {
 };
 
 export const hasNotificationPermission = async () => {
-  alert(Notification.permission);
   if (Notification.permission === "granted") {
     return true;
   } else {

@@ -11,6 +11,9 @@ const morgan = require("morgan");
 const listenForNotifications = require("./utils/listenForNotifications");
 const notificationSubscription = require("./controllers/notificationSubscription");
 
+// const webpush = require("web-push");
+// console.log(webpush.generateVAPIDKeys());
+
 app.use(morgan("dev"));
 mongoose
   .connect(MONGO_URL, {

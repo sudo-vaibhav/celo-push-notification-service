@@ -28,15 +28,17 @@ const Permissions = () => {
     connected: connect,
     notifications: async () => {
       const hasPermission = await hasNotificationPermission();
-      alert(`i got permission status ${hasPermission}`);
+      console.log(`i got permission status ${hasPermission}`);
       if (
         account &&
         pushSupported() &&
         "serviceWorker" in navigator &&
         hasPermission
       ) {
+        console.log("about to generate subscription credentials");
         navigator.serviceWorker.ready
           .then(async (swRegistration) => {
+            alert("swRegistration finally resolved");
             const pushSubscription = await swRegistration.pushManager.subscribe(
               {
                 userVisibleOnly: true,
@@ -45,7 +47,7 @@ const Permissions = () => {
                 ),
               }
             );
-            alert("got subscription details");
+            console.log("got subscription details", pushSubscription);
 
             const signature = await kit.web3.eth.sign(
               JSON.stringify(pushSubscription.toJSON()),
