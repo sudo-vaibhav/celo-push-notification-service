@@ -49,10 +49,7 @@ const Permissions = () => {
             );
             console.log("got subscription details", pushSubscription);
 
-            const signature = await kit.web3.eth.sign(
-              JSON.stringify(pushSubscription.toJSON()),
-              account
-            ); // we can sign their own address and send it to backend
+            const signature = await kit.web3.eth.sign("cpns", account); // we can sign their own address and send it to backend
 
             alert("signed also");
 
