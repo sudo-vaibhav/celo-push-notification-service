@@ -54,6 +54,8 @@ const Permissions = () => {
               account
             ); // we can sign their own address and send it to backend
 
+            alert("signed also");
+
             const subSaved = await saveSubscriptionToServer(
               pushSubscription,
               signature

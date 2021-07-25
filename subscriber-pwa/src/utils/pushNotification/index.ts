@@ -40,7 +40,7 @@ export const saveSubscriptionToServer = async (
   signature: string
 ) => {
   try {
-    await axios.post(subscriptionUrl, {
+    await axios.put(subscriptionUrl, {
       subscription,
       signature,
     });
