@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import BottomNavigator from "./components/Layout/BottomNavigator";
-import Channels from "./views/Channels";
+import Channels from "./views/Channels/";
 import Notifications from "./views/Notifications";
 import Permissions from "./views/Permissions";
 import { ContractKitProvider } from "@celo-tools/use-contractkit";
@@ -11,9 +11,9 @@ const App = () => {
   return (
     <ContractKitProvider
       dapp={{
-        name: "cpns",
-        description: "Bringing the web3 out of the stone age",
-        url: "https://cpns.web.app",
+        name: "CPNS",
+        description: "Bringing WEB3 out of the stone ages",
+        url: "https://celopns.web.app",
       }}
     >
       <Router>

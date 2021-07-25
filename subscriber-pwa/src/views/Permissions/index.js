@@ -7,7 +7,7 @@ import {
   pushSupported,
   hasNotificationPermission,
   saveSubscriptionToServer,
-} from "../../utils";
+} from "../../utils/pushNotification";
 import {
   APPLICATION_SERVER_PUBLIC_KEY,
   subscriptionUrl,
@@ -73,31 +73,37 @@ const Permissions = () => {
     },
   };
   useEffect(() => {
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setState({ installed: true });
-    }
+    const newState = {};
 
-    if (
+    newState["installed"] = true; // we can't reliably detect app installation, so we just assume it's there
+
+    newState["notifications"] =
       "Notification" in window &&
-      localStorage.getItem("PUSH_NOTIFICATION_SUBSCRIBED") === "1"
-    ) {
-      setState({ notifications: true });
-    }
+      localStorage.getItem("PUSH_NOTIFICATION_SUBSCRIBED") === "1";
 
-    if (account) {
-      setState({ connected: true });
-    }
+    newState["connected"] = account != null;
+
+    setState(newState);
   }, [account, refreshToggle]);
 
   return (
     <div>
       <div className="container">
-        <h3 className="text-2xl mt-4 font-bold">Permissions</h3>
+        <div className="mt-4 flex justify-end">
+          <button
+            className="btn btn-dark"
+            onClick={account ? () => {} : connect}
+          >
+            {account ? account.slice(0, 10) + "..." : "Not connected"}
+          </button>
+        </div>
+        <h3 className="text-2xl my-4 font-bold">Permissions</h3>
         {pushSupported() ? (
           <>
             <p className="my-4">
-              Make sure you've followed the below steps in the correct order:
-              {window.location.href} <br />
+              Click the options to get the correct permissions. Make sure you've
+              followed the below steps in the correct order:
+              <br />
               {subscriptionUrl}
             </p>
             <div className="flex justify-end">
