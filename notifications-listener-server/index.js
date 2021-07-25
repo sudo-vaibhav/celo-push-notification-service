@@ -6,6 +6,8 @@ app.use(express.json());
 const { MONGO_URL } = require("./secrets");
 const morgan = require("morgan");
 const listenForNotifications = require("./utils/listenForNotifications");
+const notificationSubscription = require("./controllers/notificationSubscription");
+
 app.use(morgan("dev"));
 mongoose
   .connect(MONGO_URL, {
@@ -16,9 +18,7 @@ mongoose
   .then(() => {
     console.log("connected to DB");
 
-    app.post("/notification-subscription", (req, res) => {
-      res.status(201).send("ok");
-    });
+    app.use("/notification-subscription", notificationSubscription);
 
     app.listen(PORT, () => {
       listenForNotifications();

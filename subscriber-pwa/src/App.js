@@ -7,6 +7,7 @@ import { ContractKitProvider } from "@celo-tools/use-contractkit";
 import "@celo-tools/use-contractkit/lib/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { BOTTOM_NAVIGATOR_MARGIN_BOTTOM } from "./constants";
 const App = () => {
   return (
     <ContractKitProvider
@@ -17,11 +18,13 @@ const App = () => {
       }}
     >
       <Router>
-        <Switch>
-          <Route exact path="/" component={Notifications} />
-          <Route path="/permissions" component={Permissions} />
-          <Route path="/channels" component={Channels} />
-        </Switch>
+        <div style={{ marginBottom: BOTTOM_NAVIGATOR_MARGIN_BOTTOM }}>
+          <Switch>
+            <Route exact path="/" component={Notifications} />
+            <Route path="/permissions" component={Permissions} />
+            <Route path="/channels" component={Channels} />
+          </Switch>
+        </div>
         <ToastContainer position="bottom-right" />
         <BottomNavigator />
       </Router>

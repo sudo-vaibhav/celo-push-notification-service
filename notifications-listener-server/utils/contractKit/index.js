@@ -10,4 +10,5 @@ const contract = new kit.web3.eth.Contract(
 
 module.exports = {
   contract,
+  kit,
 };

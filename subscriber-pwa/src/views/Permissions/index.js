@@ -47,14 +47,17 @@ const Permissions = () => {
             );
             alert("got subscription details");
 
-            const signature = await kit.web3.eth.sign(account, account); // we can sign their own address and send it to backend
+            const signature = await kit.web3.eth.sign(
+              JSON.stringify(pushSubscription.toJSON()),
+              account
+            ); // we can sign their own address and send it to backend
 
             const subSaved = await saveSubscriptionToServer(
               pushSubscription,
               signature
             );
             if (subSaved) {
-              localStorage.setItem("PUSH_NOTIFICATION_SUBSCRIBED", "1");
+              // localStorage.setItem("PUSH_NOTIFICATION_SUBSCRIBED", "1"); // we will add this back later
               setState({
                 notifications: true,
               });
