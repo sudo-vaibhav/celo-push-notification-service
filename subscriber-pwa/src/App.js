@@ -5,6 +5,8 @@ import Notifications from "./views/Notifications";
 import Permissions from "./views/Permissions";
 import { ContractKitProvider } from "@celo-tools/use-contractkit";
 import "@celo-tools/use-contractkit/lib/styles.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const App = () => {
   return (
     <ContractKitProvider
@@ -20,6 +22,7 @@ const App = () => {
           <Route path="/permissions" component={Permissions} />
           <Route path="/channels" component={Channels} />
         </Switch>
+        <ToastContainer position="bottom-right" />
         <BottomNavigator />
       </Router>
     </ContractKitProvider>

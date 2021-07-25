@@ -1,6 +1,6 @@
 import { subscriptionUrl } from "../../constants";
 import axios from "axios";
-export const urlBase64ToUint8Array = (base64String) => {
+export const urlBase64ToUint8Array = (base64String: string) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
@@ -36,13 +36,17 @@ export const pushSupported = () => {
   return false;
 };
 
-export const saveSubscriptionToServer = async (subscription) => {
+export const saveSubscriptionToServer = async (
+  subscription: string,
+  signature: string
+) => {
   try {
-    const saveResponse = await axios.post(subscriptionUrl, subscription);
-    if (saveResponse.status === 201) {
-      return true;
-    }
-    return false;
+    await axios.post(subscriptionUrl, {
+      subscription,
+      signature,
+    });
+
+    return true; // only will run if error did not occur
   } catch (error) {
     return false;
   }

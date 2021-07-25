@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useContractKit } from "@celo-tools/use-contractkit";
+import useContract from "../../components/hooks/useContract";
 import FeatherIcon from "feather-icons-react";
+import { useContractKit } from "@celo-tools/use-contractkit";
 import {
   urlBase64ToUint8Array,
   pushSupported,
@@ -13,13 +14,14 @@ import {
 } from "../../constants";
 
 const Permissions = () => {
+  const { connect } = useContractKit();
   const [state, setState] = useState({
     installed: true,
     connected: false,
     notifications: false,
   });
 
-  const { account, connect } = useContractKit();
+  const { kit, account } = useContract();
   const [refreshToggle, setRefreshToggle] = useState(false);
   const actions = {
     installed: () => {}, // no need to do anything, user will do the appropriate action
@@ -27,7 +29,12 @@ const Permissions = () => {
     notifications: async () => {
       const hasPermission = await hasNotificationPermission();
       alert(`i got permission status ${hasPermission}`);
-      if (pushSupported() && "serviceWorker" in navigator && hasPermission) {
+      if (
+        account &&
+        pushSupported() &&
+        "serviceWorker" in navigator &&
+        hasPermission
+      ) {
         navigator.serviceWorker.ready
           .then(async (swRegistration) => {
             const pushSubscription = await swRegistration.pushManager.subscribe(
@@ -39,7 +46,13 @@ const Permissions = () => {
               }
             );
             alert("got subscription details");
-            const subSaved = await saveSubscriptionToServer(pushSubscription);
+
+            const signature = await kit.web3.eth.sign(account, account); // we can sign their own address and send it to backend
+
+            const subSaved = await saveSubscriptionToServer(
+              pushSubscription,
+              signature
+            );
             if (subSaved) {
               localStorage.setItem("PUSH_NOTIFICATION_SUBSCRIBED", "1");
               setState({
