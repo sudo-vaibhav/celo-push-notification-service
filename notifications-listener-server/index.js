@@ -1,6 +1,9 @@
 const PORT = process.env.PORT || 8000;
 const express = require("express");
+require("express-async-errors");
+const cors = require("cors");
 const app = express();
+app.use(cors());
 const mongoose = require("mongoose");
 app.use(express.json());
 const { MONGO_URL } = require("./secrets");
