@@ -1,0 +1,1 @@
+exports.ALLOWED_NETWORK = "44787";
