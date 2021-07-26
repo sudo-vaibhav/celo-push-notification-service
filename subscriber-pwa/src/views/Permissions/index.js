@@ -1,94 +1,70 @@
 import { useEffect, useState } from "react";
+import JSEncrypt from "jsencrypt";
+import { ENCRYPT_OPTIONS, NOTIFICATION_PRIVATE_KEY } from "../../constants";
 import useContract from "../../components/hooks/useContract";
 import FeatherIcon from "feather-icons-react";
 import { useContractKit } from "@celo-tools/use-contractkit";
-import {
-  urlBase64ToUint8Array,
-  pushSupported,
-  hasNotificationPermission,
-  saveSubscriptionToServer,
-} from "../../utils/pushNotification";
-import {
-  APPLICATION_SERVER_PUBLIC_KEY,
-  subscriptionUrl,
-} from "../../constants";
-
+import { pushSupported } from "../../utils/pushNotification";
+import notifications from "./actions/notifications";
+import publishedKeys from "./actions/publishedKeys";
+import localforage from "localforage";
+import { toast } from "react-toastify";
 const Permissions = () => {
   const { connect } = useContractKit();
   const [state, setState] = useState({
     installed: true,
     connected: false,
     notifications: false,
+    "published-keys": false,
   });
 
-  const { kit, account } = useContract();
+  const { kit, account, contract } = useContract();
   const [refreshToggle, setRefreshToggle] = useState(false);
   const actions = {
-    installed: () => {}, // no need to do anything, user will do the appropriate action
     connected: connect,
-    notifications: async () => {
-      const hasPermission = await hasNotificationPermission();
-      console.log(`i got permission status ${hasPermission}`);
-      if (
-        account &&
-        pushSupported() &&
-        "serviceWorker" in navigator &&
-        hasPermission
-      ) {
-        console.log("about to generate subscription credentials");
-        navigator.serviceWorker.ready
-          .then(async (swRegistration) => {
-            alert("swRegistration finally resolved");
-            const pushSubscription = await swRegistration.pushManager.subscribe(
-              {
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(
-                  APPLICATION_SERVER_PUBLIC_KEY
-                ),
-              }
-            );
-            console.log("got subscription details", pushSubscription);
-
-            const signature = await kit.web3.eth.sign("cpns", account); // we can sign their own address and send it to backend
-
-            alert("signed also");
-
-            const subSaved = await saveSubscriptionToServer(
-              pushSubscription,
-              signature
-            );
-            if (subSaved) {
-              // localStorage.setItem("PUSH_NOTIFICATION_SUBSCRIBED", "1"); // we will add this back later
-              setState({
-                notifications: true,
-              });
-              alert("Push subscription confirmed");
-            } else {
-              alert("An eror occured");
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            alert("An error occured setting up push notification");
-          });
-      } else {
-        alert("Notifications not allowed.");
-      }
+    notifications: () => {
+      notifications({
+        kit,
+        account,
+        setState,
+      });
+    },
+    "published-keys": async () => {
+      await publishedKeys({
+        contract,
+        account,
+      });
+      setRefreshToggle(!refreshToggle);
     },
   };
   useEffect(() => {
-    const newState = {};
+    (async () => {
+      const newState = {};
 
-    newState["installed"] = true; // we can't reliably detect app installation, so we just assume it's there
+      newState["notifications"] =
+        "Notification" in window &&
+        localStorage.getItem("PUSH_NOTIFICATION_SUBSCRIBED") === "1";
 
-    newState["notifications"] =
-      "Notification" in window &&
-      localStorage.getItem("PUSH_NOTIFICATION_SUBSCRIBED") === "1";
+      newState["connected"] = account != null;
 
-    newState["connected"] = account != null;
+      const privateKey = await localforage.getItem(NOTIFICATION_PRIVATE_KEY);
+      newState["published-keys"] = false;
 
-    setState(newState);
-  }, [account, refreshToggle]);
+      if (privateKey && contract) {
+        // now check if blockchain is updated or not
+        const encrypt = new JSEncrypt(ENCRYPT_OPTIONS);
+        encrypt.setKey(privateKey);
+        const publicKey = encrypt.getPublicKey();
+        const publishedPublicKey = await contract.methods
+          .publicKeys(account)
+          .call();
+        if (publicKey === publishedPublicKey) {
+          newState["published-keys"] = true;
+        }
+      }
+      setState((oldState) => ({ ...oldState, ...newState }));
+    })();
+  }, [account, refreshToggle, contract, contract?.methods]);
 
   return (
     <div>
@@ -108,17 +84,51 @@ const Permissions = () => {
               Click the options to get the correct permissions. Make sure you've
               followed the below steps in the correct order:
               <br />
-              {subscriptionUrl}
             </p>
-            <div className="flex justify-end">
-              <button
-                className="flex btn btn-dark"
-                onClick={() => {
-                  setRefreshToggle(!refreshToggle);
-                }}
-              >
-                Refresh <FeatherIcon icon="refresh-cw" className="ml-2" />
-              </button>
+            <div className="flex justify-between">
+              {[
+                {
+                  text: "Refresh",
+                  onClick: () => {
+                    setRefreshToggle(!refreshToggle);
+                  },
+                  icon: "refresh-cw",
+                },
+                {
+                  onClick: async () => {
+                    if (state["published-keys"]) {
+                      await navigator.clipboard.writeText(
+                        await localforage.getItem(NOTIFICATION_PRIVATE_KEY)
+                      );
+                      toast.success("Copied private key to clipboard");
+                    } else {
+                      const privateKey = prompt("Paste your private key here");
+                      if (privateKey) {
+                        await publishedKeys({
+                          contract,
+                          account,
+                          privateKey,
+                        });
+                        setRefreshToggle(!refreshToggle);
+                      } else {
+                        toast.error("Invalid private key");
+                      }
+                    }
+                  },
+                  text: state["published-keys"] ? "Export Key" : "Import Key",
+                  icon: "clipboard",
+                },
+              ].map((b) => {
+                return (
+                  <button
+                    className="flex btn btn-dark"
+                    key={b.text}
+                    onClick={b.onClick}
+                  >
+                    {b.text} <FeatherIcon icon={b.icon} className="ml-2" />
+                  </button>
+                );
+              })}
             </div>
             {[
               {
@@ -130,6 +140,11 @@ const Permissions = () => {
                 text: "Connect to your celo wallet",
               },
               {
+                name: "published-keys",
+                text: "Publish your public keys. Private notifications need this to reach you.",
+              },
+
+              {
                 name: "notifications",
                 text: "Allow permission for push notifications",
               },
@@ -137,7 +152,7 @@ const Permissions = () => {
               const enabled = state[p.name];
               return (
                 <div
-                  className="bg-primary-700 my-2 flex justify-between"
+                  className="bg-primary-700 my-2 flex justify-between cursor-pointer"
                   onClick={!enabled ? actions[p.name] : () => {}}
                   key={idx}
                 >

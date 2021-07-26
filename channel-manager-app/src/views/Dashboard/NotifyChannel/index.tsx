@@ -38,7 +38,7 @@ const NotifyChannel = () => {
             private: "no",
           }}
           validationSchema={NotifySchema}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values) => {
             console.log(values);
             let channelId = parseInt(channel);
             return new Promise(async (resolve, reject) => {

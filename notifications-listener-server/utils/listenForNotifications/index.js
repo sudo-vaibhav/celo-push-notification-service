@@ -1,5 +1,5 @@
-const NotificationSubscription = require("../../models/NotificationSubscription");
 const { contract } = require("../contractKit");
+const sendNotifications = require("../sendNotifications");
 const listenForNotifications = () => {
   console.log("running notifications listener");
   contract.events.allEvents(
@@ -11,22 +11,16 @@ const listenForNotifications = () => {
       if (error) {
         console.log("some error occured", error);
       } else {
-        const values = event.returnValues;
-        switch (event.event) {
-          case "NotifyAllInChannel":
-            console.log("NotifyAllInChannel event detected");
-            const subscribers = await contract.methods
-              .subscribersInChannel(values.channel)
-              .call();
-            subscriptions = await NotificationSubscription.find({
-              address: subscribers,
-            });
-
-            console.log(subscriptions);
-            break;
-          case "NotifyOneInChannel":
-            console.log("NotifyOneInChannel event detected");
-            break;
+        try {
+          if (event.event) {
+            console.log("I'm in and i was: ", event);
+            await sendNotifications(event, event.event);
+          }
+        } catch (e) {
+          console.log(
+            "error in sending notifications after detecting event: ",
+            e
+          );
         }
       }
     }

@@ -2,13 +2,6 @@ const mongoose = require("mongoose");
 
 const NotificationSubscriptionSchema = new mongoose.Schema(
   {
-    endpoint: {
-      type: String,
-      required: true,
-      unique: true,
-      immutable: true,
-    },
-
     address: {
       type: String,
       required: true,
