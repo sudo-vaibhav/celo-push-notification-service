@@ -2,7 +2,8 @@
 
 import localforage from "https://cdn.skypack.dev/localforage";
 console.log("localforage", localforage);
-const APP_BASE_URL = "http://localhost:3000/";
+const APP_BASE_URL = "/"; //experimenting with relative URLs
+// const APP_BASE_URL = "http://localhost:3000/";
 const getInfuraUrl = (hash) => {
   return "https://ipfs.infura.io/ipfs/" + hash;
 };
@@ -23,7 +24,14 @@ self.addEventListener("push", async (event) => {
   let notificationsSoFar = await localforage.getItem(NOTIFICATIONS);
   console.log("notificationsSoFar", notificationsSoFar);
   if (notificationsSoFar) {
-    notificationsSoFar = JSON.parse(notificationsSoFar);
+    try {
+      notificationsSoFar = JSON.parse(notificationsSoFar);
+    } catch (e) {
+      console.log(
+        "could not parse notifications from indexedDB inside service worker, resetting stored notifications"
+      );
+      notificationsSoFar = [];
+    }
   } else {
     notificationsSoFar = [];
   }

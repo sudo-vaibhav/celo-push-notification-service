@@ -18,7 +18,6 @@ export const hasNotificationPermission = async () => {
     return true;
   } else {
     const permission = await Notification.requestPermission();
-    alert(`permission ${permission}`);
     if (permission === "granted") {
       return true;
     }
