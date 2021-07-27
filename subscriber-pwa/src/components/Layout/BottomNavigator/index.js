@@ -23,7 +23,7 @@ const BottomNavigator = () => {
           {
             title: "Notifications",
             icon: "bell",
-            link: "/",
+            link: "/notifications",
           },
           {
             title: "Channels",

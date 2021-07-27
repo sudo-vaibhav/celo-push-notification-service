@@ -20,7 +20,7 @@ const App = () => {
       <Router>
         <div style={{ marginBottom: BOTTOM_NAVIGATOR_MARGIN_BOTTOM }}>
           <Switch>
-            <Route exact path="/" component={Notifications} />
+            <Route exact path="/notifications" component={Notifications} />
             <Route path="/permissions" component={Permissions} />
             <Route path="/channels" component={Channels} />
           </Switch>

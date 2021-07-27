@@ -6660,6 +6660,11 @@ fresh@0.5.2:
   resolved "https://registry.npmjs.org/fresh/-/fresh-0.5.2.tgz"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
+friendly-time@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/friendly-time/-/friendly-time-1.1.1.tgz#919bdbef1a1b540f3f881dcfcdeed92c56c2361a"
+  integrity sha512-1hTb4ga36uONG3RKY3eWdxp3/rTAfhcmEBtyKtjOdzdMAHwb94rul5WGkLvBjy0U1jelOrt/UM4ZAxRKfSM8SA==
+
 from2@^2.1.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/from2/-/from2-2.3.0.tgz"

@@ -19,7 +19,7 @@ const notifications = async ({ kit, account, setState }) => {
     console.log("about to generate subscription credentials");
     navigator.serviceWorker.ready
       .then(async (swRegistration) => {
-        alert("swRegistration finally resolved");
+        console.log("swRegistration finally resolved");
         const pushSubscription = await swRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(
@@ -42,14 +42,14 @@ const notifications = async ({ kit, account, setState }) => {
             ...oldState,
             notifications: true,
           }));
-          alert("Push subscription confirmed");
+          console.log("Push subscription confirmed");
         } else {
-          alert("An eror occured");
+          console.log("An eror occured");
         }
       })
       .catch((error) => {
         console.log(error);
-        alert("An error occured setting up push notification");
+        console.log("An error occured setting up push notification");
       });
   } else {
     toast.error("Notifications not allowed.");

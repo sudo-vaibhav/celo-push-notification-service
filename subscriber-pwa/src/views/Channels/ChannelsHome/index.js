@@ -55,13 +55,13 @@ const ChannelsHome = () => {
           ))}
         </div>
         <h3 className="text-2xl my-4 font-bold">Other Channels</h3>
-        <div className="grid gap-4 my-4">
+        <div className="my-4">
           {otherChannels.map((channel, idx) => {
             return (
               <Link
                 to={`/channels/${channel.id}`}
                 key={idx}
-                className="shadow-md p-4 grid grid-cols-3 gap-4 border rounded-lg border-primary-700"
+                className="card grid grid-cols-3 gap-4 my-4"
               >
                 <div className="col-span-2">
                   <h4 className="font-bold text-lg">{channel.name}</h4>

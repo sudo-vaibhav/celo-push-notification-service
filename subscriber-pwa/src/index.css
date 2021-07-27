@@ -50,3 +50,7 @@ h6 {
 .Toastify__toast--success {
   @apply bg-primary-700 text-dark-900 !important;
 }
+
+.card {
+  @apply shadow-md p-4 border rounded-lg border-primary-700;
+}

@@ -2,7 +2,7 @@ import { Alfajores } from "@celo-tools/use-contractkit";
 
 export const HEADER_MARGIN_TOP = 70;
 export const HEADER_MIN_HEIGHT_STRING = `calc(100vh - ${HEADER_MARGIN_TOP}px)`;
-export const BOTTOM_NAVIGATOR_MARGIN_BOTTOM = 84;
+export const BOTTOM_NAVIGATOR_MARGIN_BOTTOM = 100;
 export const BOTTOM_NAVIGATOR_MIN_HEIGHT_STRING = `calc(99vh - ${BOTTOM_NAVIGATOR_MARGIN_BOTTOM}px)`;
 
 export const APPLICATION_SERVER_PUBLIC_KEY =
@@ -18,3 +18,4 @@ export const ENCRYPT_OPTIONS = {
 };
 export const NOTIFICATION_PRIVATE_KEY = "NOTIFICATION_PRIVATE_KEY";
 export const APP_BASE_URL = "https://celopns.web.app/";
+export const NOTIFICATIONS = "NOTIFICATIONS";

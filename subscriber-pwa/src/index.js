@@ -10,7 +10,18 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-serviceWorkerRegistration.register();
+navigator.serviceWorker
+  .register("/service-worker.js", { type: "module" })
+  .then((registration) => {
+    console.log(registration);
+    // now lets delete some keys in local storage so that we
+    // can get a new subscription for ourselves from backend
+    if (serviceWorkerRegistration.isLocalhost) {
+      localStorage.removeItem("PUSH_NOTIFICATION_SUBSCRIBED");
+    }
+  });
+
+// serviceWorkerRegistration.register();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

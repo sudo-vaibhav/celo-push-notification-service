@@ -37,11 +37,14 @@ const sendNotifications = async (event, nature) => {
         address: subscribers,
       });
 
-      console.log("the respective subscriptions for these people are:",subscriptions)
+      console.log(
+        "the respective subscriptions for these people are:",
+        subscriptions
+      );
 
       await Promise.allSettled(
-        subscriptions.map((s) => {
-          return sendOneNotificationToSubscription(s, {
+        subscriptions.map((subscription) => {
+          return sendOneNotificationToSubscription(subscription, {
             ...notificationInfo,
             privateNotification: false,
           });
