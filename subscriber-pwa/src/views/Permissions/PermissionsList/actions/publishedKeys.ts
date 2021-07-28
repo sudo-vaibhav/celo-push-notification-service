@@ -6,7 +6,7 @@ import {
   ENCRYPT_OPTIONS,
   NOTIFICATIONS,
   NOTIFICATION_PRIVATE_KEY,
-} from "../../../constants";
+} from "../../../../constants";
 const publishedKeys = async ({
   contract,
   account,
@@ -67,7 +67,7 @@ const publishedKeys = async ({
           });
       } catch (err) {
         toast.error("could not publish public key!");
-        resolve(true);
+        throw new Error("could not publish public key!");
       }
     });
   }
