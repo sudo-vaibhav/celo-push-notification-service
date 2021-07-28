@@ -4,7 +4,7 @@ import useContract from "../../../../components/hooks/useContract";
 import getInfuraUrl from "../../../../utils/getInfuraUrl";
 import noChannelsImage from "./no-channels.svg";
 
-const NoChannels = () => {
+export const NoChannels = () => {
   return (
     <div className="text-center border rounded-lg border-dashed border-primary-700 p-4">
       <img

@@ -4,6 +4,7 @@ import Channels from "./Channels";
 import SideNav from "./SideNav";
 import AddOrEditChannel from "./AddOrEditChannel";
 import NotifyChannel from "./NotifyChannel";
+import ContractNotifications from "./ContractNotifications";
 const Dashboard = () => {
   return (
     <div
@@ -24,6 +25,12 @@ const Dashboard = () => {
           <Route
             path="/dashboard/channels/:channel/notify"
             component={NotifyChannel}
+          />
+
+          <Route
+            path="/dashboard/contract-notifications"
+            exact
+            component={ContractNotifications}
           />
         </Switch>
       </div>

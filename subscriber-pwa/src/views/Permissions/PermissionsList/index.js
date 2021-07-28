@@ -46,8 +46,20 @@ const PermissionsList = () => {
       }),
   };
 
+  const refresh = () => {
+    managePermissionStatus({
+      setState,
+      account,
+      contract,
+    });
+  };
+
   useEffect(() => {
-    managePermissionStatus({ setState, account, contract });
+    managePermissionStatus({
+      setState,
+      account,
+      contract,
+    });
   }, [account, contract]);
 
   const actionWrapper = async (actionKey) => {
@@ -80,21 +92,16 @@ const PermissionsList = () => {
         followed the below steps in the correct order:
         <br />
       </p>
-      {/* <div className="flex justify-between">
+      <div className="flex justify-between">
         {[
           {
             text: "Refresh",
-            onClick: () => {
-              setState((oldState) => ({
-                ...oldState,
-                refreshToggle: !oldState.refreshToggle,
-              }));
-            },
+            onClick: refresh,
             icon: "refresh-cw",
           },
           {
             onClick: async () => {
-              if (state["published-keys"]) {
+              if (state.permissions["published-keys"]) {
                 await navigator.clipboard.writeText(
                   await localforage.getItem(NOTIFICATION_PRIVATE_KEY)
                 );
@@ -112,7 +119,9 @@ const PermissionsList = () => {
                 }
               }
             },
-            text: state["published-keys"] ? "Export Key" : "Import Key",
+            text: state.permissions["published-keys"]
+              ? "Export Key"
+              : "Import Key",
             icon: "clipboard",
           },
         ].map((b) => {
@@ -126,7 +135,7 @@ const PermissionsList = () => {
             </button>
           );
         })}
-      </div> */}
+      </div>
       {[
         {
           name: "installed",

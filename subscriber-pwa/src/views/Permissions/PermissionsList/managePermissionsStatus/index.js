@@ -5,6 +5,7 @@ import {
 } from "../../../../constants";
 import JSEncrypt from "jsencrypt";
 const managePermissionStatus = async ({ setState, account, contract }) => {
+  console.log("recalculating alloted permissions");
   const newPermissionsState = {};
   newPermissionsState["notifications"] =
     "Notification" in window &&

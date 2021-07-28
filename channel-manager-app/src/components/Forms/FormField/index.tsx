@@ -57,7 +57,7 @@ const FormField = ({
             setTouched={setTouched}
           />
         ) : type === "radio" ? (
-          <div className="flex">
+          <div className="flex overflow-auto">
             {options.map((option) => {
               const active = option === values[name];
               return (

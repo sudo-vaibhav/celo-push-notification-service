@@ -51,6 +51,11 @@ const SideNav = () => {
               icon: "plus-circle",
               link: "/dashboard/channels",
             },
+            {
+              text: "Contract Notifications",
+              icon: "radio",
+              link: "/dashboard/contract-notifications",
+            },
           ]}
         />
       </div>
