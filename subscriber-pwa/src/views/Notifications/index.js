@@ -84,7 +84,7 @@ const Notifications = () => {
   return (
     <div>
       <div
-        className="container break-all"
+        className="container "
         style={{
           minHeight: BOTTOM_NAVIGATOR_MIN_HEIGHT_STRING,
           marginBottom: BOTTOM_NAVIGATOR_MARGIN_BOTTOM,
