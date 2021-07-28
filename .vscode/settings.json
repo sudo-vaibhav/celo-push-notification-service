@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/e13c7b0d-1c8f-45e1-8bcc-7292cbcb4738/resourceGroups/appsvc_linux_centralus_basic2/providers/Microsoft.Web/sites/cpns",
+  "appService.deploySubpath": "notifications-listener-server"
+}
