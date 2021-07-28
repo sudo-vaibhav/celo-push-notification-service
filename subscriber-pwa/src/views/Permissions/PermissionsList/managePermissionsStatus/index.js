@@ -5,15 +5,15 @@ import {
 } from "../../../../constants";
 import JSEncrypt from "jsencrypt";
 const managePermissionStatus = async ({ setState, account, contract }) => {
-  const newState = {};
-  newState["notifications"] =
+  const newPermissionsState = {};
+  newPermissionsState["notifications"] =
     "Notification" in window &&
     localStorage.getItem("PUSH_NOTIFICATION_SUBSCRIBED") === "1";
 
-  newState["connected"] = account != null;
+  newPermissionsState["connected"] = account != null;
 
   const privateKey = await localforage.getItem(NOTIFICATION_PRIVATE_KEY);
-  newState["published-keys"] = false;
+  newPermissionsState["published-keys"] = false;
 
   if (privateKey && contract) {
     // now check if blockchain is updated or not
@@ -24,10 +24,13 @@ const managePermissionStatus = async ({ setState, account, contract }) => {
       .publicKeys(account)
       .call();
     if (publicKey === publishedPublicKey) {
-      newState["published-keys"] = true;
+      newPermissionsState["published-keys"] = true;
     }
   }
-  setState((oldState) => ({ ...oldState, ...newState }));
+  setState((oldState) => ({
+    ...oldState,
+    permissions: { ...oldState.permissions, ...newPermissionsState },
+  }));
 };
 
 export default managePermissionStatus;

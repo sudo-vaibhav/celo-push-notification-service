@@ -7,7 +7,7 @@ import {
 
 import { APPLICATION_SERVER_PUBLIC_KEY } from "../../../../constants";
 import { toast } from "react-toastify";
-const notifications = async ({ kit, account, setState }) => {
+const notifications = async ({ kit, account }) => {
   const hasPermission = await hasNotificationPermission();
   console.log(`i got permission status ${hasPermission}`);
   if (

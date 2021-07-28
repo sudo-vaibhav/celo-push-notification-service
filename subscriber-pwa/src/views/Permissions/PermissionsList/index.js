@@ -8,6 +8,7 @@ import useContract from "../../../components/hooks/useContract";
 import notifications from "./actions/notifications";
 import publishedKeys from "./actions/publishedKeys";
 import managePermissionStatus from "./managePermissionsStatus";
+import Loader from "react-loader-spinner";
 
 const PermissionsList = () => {
   const { connect } = useContractKit();
@@ -36,7 +37,6 @@ const PermissionsList = () => {
       notifications({
         kit,
         account,
-        setState,
       }),
     // generates a new key pair and stores it on chain
     "published-keys": async () =>
@@ -167,13 +167,22 @@ const PermissionsList = () => {
               {idx + 1}) {p.text}
             </div>
             <div className="p-4 bg-dark-900 grid place-items-center">
-              <FeatherIcon
-                icon={
-                  enabled ? (p.name === "installed" ? "smile" : "check") : "x"
-                }
-                size={36}
-                className={enabled ? "text-primary-700" : "text-red-600"}
-              />
+              {isCurrentlyRunning ? (
+                <Loader
+                  type="TailSpin"
+                  color="var(--color-primary-700)"
+                  height={36}
+                  width={36}
+                />
+              ) : (
+                <FeatherIcon
+                  icon={
+                    enabled ? (p.name === "installed" ? "smile" : "check") : "x"
+                  }
+                  size={36}
+                  className={enabled ? "text-primary-700" : "text-red-600"}
+                />
+              )}
             </div>
           </div>
         );
