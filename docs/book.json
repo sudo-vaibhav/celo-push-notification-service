@@ -1,0 +1,6 @@
+{
+  "plugins": ["hints", "page-ref", "youtube"],
+  "variables": {
+        "subscriberApp": "https://celopns.web.app/"
+    }
+}

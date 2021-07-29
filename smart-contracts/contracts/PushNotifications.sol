@@ -107,7 +107,7 @@ contract PushNotifications{
         return true;
     }
 
-    // this is useful when you want a notification event to be fireable from a contract, you 
+    // this is useful when admin wants to also provide push access to another address
     function setPushAccess(uint256 _channel,address _address,bool _access) public returns (bool){
         require(_channel < channels.length,"channel does not exist");
         require(msg.sender == channels[_channel].admin,"You must be the channel admin to set push access");
@@ -129,12 +129,12 @@ contract PushNotifications{
     ) public returns (bool){
         require(_channel < channels.length,"channel does not exist");
         Channel memory channel = channels[_channel];
-        // require that the sender is an admin or one of the permissed contracts
+        // require that the sender is an admin or one of the permissed addresses
         if(_privateNotification){
-            require(channel.admin == msg.sender,"sender is not admin of channel, private notification can only be sent admin of channel. Private notifications are disabled for smart contracts since secrets can't be kept on-chain");
+            require(channel.admin == msg.sender,"sender is not admin of channel, private notification can only be sent admin of channel.");
         }
         else{
-            require(channel.admin == msg.sender || pushAccess[_channel][msg.sender] == true,"public notifications to one person in channel can only be sent by the admin or one of the allowed addresses/contracts");
+            require(channel.admin == msg.sender || pushAccess[_channel][msg.sender] == true,"public notifications to one person in channel can only be sent by the admin or one of the allowed addresses");
         }
 
         require(
