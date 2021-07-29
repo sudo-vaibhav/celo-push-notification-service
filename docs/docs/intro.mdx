@@ -1,0 +1,17 @@
+# Celo Push Notification Service
+
+WEB3 is revolutionary in every manner, except for how it expects you to go and check again and again for simple things instead of delivering important notifications and alerts right to you like every app in WEB2 land does. Here are a few use cases where it would have been nice to have a notification service that a smart contract could call right from WITHIN THE CONTRACT (although provisions for external notifications can also be made if needed):
+
+- notification about liquidation of your collateral on moola
+- sudden change in price of Celo or gas price changes
+- domain expiry by a domain naming service on celo (currently in ethereum, Ethereum Naming Service has to tweet out the details of an expired domain in hopes that the domain owner reads this tweet and renews their domain)
+
+This is a very bad UX and forces people to open these apps again and again just to check what's changed while they were away.
+
+CPNS helps to fix this by providing a notification service that can be called from within the contract. To learn more about how it works, check out [the architecture section](./architecture)
+
+Here are some relevant links:
+
+- [Celo Subscriber App](http://celopns.web.app/)
+- [Admin Dashboard App](https://cpns-dashboard.web.app/)
+- [Project Source Code](https://github.com/sudo-vaibhav/celo-push-notification-service/)

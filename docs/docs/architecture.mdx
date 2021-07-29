@@ -1,0 +1,9 @@
+# What happens under the hood?
+
+As we all know, it's not very easy for solidity to communicate with things that are outside the blockchain's ecosystem. Still, `events` in solidity allow us to learn about what's going on with our deployed contracts.
+
+What CPNS does is that it listens to all requests for notifications from contracts (through `events`) and delivers them to centralised push notification providers like Google, Apple, etc. so that devices like Android Phones and Windows OS can be notified. In order to cover maximum platforms with one code base, web push notifications were chosen as the mode for delivering notfications. Sadly there is no web push notification support for iOS yet.
+
+Provisions to delivery sensitive information have also been made using asymmetric key cryptography, more on this [here](./encrypted-notifications).
+
+> **Note:** Although decentralisation is at the heart of this project. CPNS is still not purely decentralised. There are several challenges and hard limitations involving delivering notifications to devices that only work with notification services created by their centralised manufacturers. Potential solutions are discussed in the [future work](./future-work) section. It's highly recommended to check it out.

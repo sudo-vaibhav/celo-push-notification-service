@@ -1,0 +1,9 @@
+# Future Work
+
+There is more ground to cover in two fundamental places for this project:
+
+1. Better decentralisation: Right now all notifications are routed through a single VM instance running on azure to user devices. This right now is a single point of failure. More work can be done on coming up with a consensus mechanism or governance methodology to remove this bottleneck.
+
+> The claim of potential total decentralisation in the future does need to be taken with a grain of salt. It should be noted that there will always be some element of centralisation in a system that aims to deliver to devices controlled by companies like Apple and Google. But centralisation is often a spectrum and not a hard definition. It's just that efforts should be made to decrease it at every step as much as possible.
+
+2. Eliminating nodes altogether: The extreme case solution to the decentralisation problem seems to be [periodic background sync](https://web.dev/periodic-background-sync/). This should totally eliminate the need of running any nodes for listening to notifications. But right now this technology is very new and not widely supported at all. More work can be done here as this technology evolves. This would be equivalent to every person on a blockchain running their own node.

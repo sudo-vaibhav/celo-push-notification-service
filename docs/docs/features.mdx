@@ -1,0 +1,10 @@
+# Features
+
+Here are some of the functionalities supported by the project as of July 2021:
+
+1. Spam protection: Without the explicit permission by a user, nobody can send them notifications.
+2. End to end encryption: notifications can be encrypted using RSA asymmetric key encryption.
+3. Push Access Delegation: An admin of a channel can allow or take away the access to sending notfications from channels they own. This makes notifications triggerable from within contracts itself.
+4. Support for multimedia notifications: Images and other assets can be embedded in the notification, depending on support by the receiver's operating system.
+5. Channel Broadcasts: To save gas in case of a large number of notifications, the contract can broadcast notifications to the whole channel in one go.
+6. IPFS integration: To reduce cost of storage, only the hashes of assets are stored on chain. This reduces the cost of running the contract.
