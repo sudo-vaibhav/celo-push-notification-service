@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[195],{2841:function(e,n,t){t.r(n),t.d(n,{default:function(){return u}});var c=t(7294),o=t(5977);function u(){return c.createElement(o.l_,{to:"/celo-push-notification-service/docs/intro"})}}}]);
