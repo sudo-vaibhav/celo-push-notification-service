@@ -5,13 +5,14 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 module.exports = {
   title: "Celo Push Notification Service",
   tagline: "Bringing WEB3 Out of the Stoneages",
-  url: "https://sudo-vaibhav.github.io/celo-push-notification-service",
-  baseUrl: "/",
+  url: "https://sudo-vaibhav.github.io/celo-push-notification-service/",
+  baseUrl: "/celo-push-notification-service/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/logo.png",
   organizationName: "sudo-vaibhav", // Usually your GitHub org/user name.
   projectName: "celo-push-notification-service", // Usually your repo name.
+  trailingSlash: false,
   themeConfig: {
     navbar: {
       title: "CPNS",
