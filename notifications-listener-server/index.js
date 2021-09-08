@@ -23,7 +23,7 @@ mongoose
   })
   .then(async () => {
     console.log("connected to DB");
-
+    await NotificationSubscription.init()
     app.use(
       "/notification-subscription",
       recoverAddressFromSignature,

@@ -39,7 +39,7 @@ const ChannelsList = () => {
       {myChannels.length === 0 ? (
         <NoChannels />
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-2 gap-4">
           {myChannels.map((channel, idx) => {
             return (
               <div

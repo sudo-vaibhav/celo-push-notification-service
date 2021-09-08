@@ -33,7 +33,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "PORT=4000 craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"

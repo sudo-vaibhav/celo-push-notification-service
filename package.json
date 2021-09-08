@@ -1,0 +1,11 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/sudo-vaibhav/solidity-push-notification-service.git",
+  "author": "sudo-vaibhav <mailvaibhavchopra@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^6.2.1"
+  }
+}

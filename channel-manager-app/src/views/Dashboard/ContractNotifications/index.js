@@ -31,7 +31,7 @@ const ContractNotifications = () => {
         <p className="mb-4">
           Yes, you can also trigger notifications for your users right from
           within the smart contract itself. Learn more about how to do that{" "}
-          <a className="link">here</a>
+          <a className="link" href="https://github.com/sudo-vaibhav/solidity-push-notification-service/blob/main/smart-contracts/contracts/Test.sol">here</a>
         </p>
 
         {myChannels.length > 0 ? (

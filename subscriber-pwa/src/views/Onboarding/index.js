@@ -51,7 +51,7 @@ const Onboarding = () => {
             >
               Continue
             </button>
-            <Link className="btn btn-dark">Go to app</Link>
+            <Link className="btn btn-dark" to="/notifications">Go to app</Link>
           </div>
         </div>
       </div>
