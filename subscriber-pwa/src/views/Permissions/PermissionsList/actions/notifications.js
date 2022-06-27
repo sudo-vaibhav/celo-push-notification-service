@@ -5,7 +5,7 @@ import {
   pushSupported,
 } from "../../../../utils/pushNotification";
 
-import { APPLICATION_SERVER_PUBLIC_KEY } from "../../../../constants";
+import { getApplicationServerPublicKey } from "../../../../constants";
 import { toast } from "react-toastify";
 const notifications = async ({ kit, account }) => {
   const hasPermission = await hasNotificationPermission();
@@ -22,7 +22,7 @@ const notifications = async ({ kit, account }) => {
       const pushSubscription = await swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(
-          APPLICATION_SERVER_PUBLIC_KEY
+          await getApplicationServerPublicKey()
         ),
       });
       console.log("got subscription details", pushSubscription);

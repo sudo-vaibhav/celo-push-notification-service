@@ -1,12 +1,12 @@
 const sendNotifications = require("../sendNotifications");
 const Web3 = require("web3");
 const PushNotifications = require("../../contract/PushNotifications.json");
-const { ALLOWED_NETWORK } = require("../../constants");
+const { ALLOWED_NETWORK, WEBSOCKET_URL } = require("../../constants");
 
 function setupProviderAndSubscriptions() {
   console.log("setting up websocket connection");
   let provider = new Web3.providers.WebsocketProvider(
-    "wss://alfajores-forno.celo-testnet.org/ws"
+    WEBSOCKET_URL
   );
   let web3 = new Web3(provider);
   let setupNewProvider = false;
@@ -59,7 +59,7 @@ function setupProviderAndSubscriptions() {
         }
         try {
           if (event.event) {
-            console.log("I'm in and i was: ", event);
+            console.log("Event ", event);
             await sendNotifications(event, event.event);
           }
         } catch (e) {

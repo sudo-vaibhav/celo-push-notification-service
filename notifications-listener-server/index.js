@@ -6,17 +6,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const mongoose = require("mongoose");
-const { MONGO_URL } = require("./secrets");
 const morgan = require("morgan");
 const listenForNotifications = require("./utils/listenForNotifications");
 const notificationSubscription = require("./controllers/notificationSubscription");
 const recoverAddressFromSignature = require("./utils/recoverAddressFromSignature");
 const NotificationSubscription = require("./models/NotificationSubscription");
-
 app.use(morgan("dev"));
-
 mongoose
-  .connect(MONGO_URL, {
+  .connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -29,6 +26,12 @@ mongoose
       recoverAddressFromSignature,
       notificationSubscription
     );
+
+    app.use("/public-key", (req, res) => {
+      return res.send({
+        publicKey: process.env.APPLICATION_PUBLIC_KEY
+      })
+    })
 
     app.listen(PORT, () => {
       listenForNotifications();

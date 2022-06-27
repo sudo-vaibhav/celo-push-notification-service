@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon --legacy-watch"
   },
   "dependencies": {
     "@celo/contractkit": "^1.2.4",

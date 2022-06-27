@@ -65,7 +65,7 @@ const AddOrEditChannel = () => {
                     })
                     .on("receipt", () => {
                       setSubmitting(false);
-                      toast.success("Channel udpated successfully!");
+                      toast.success("Channel updated successfully!");
                       history.push("/dashboard");
                     });
                 } else {

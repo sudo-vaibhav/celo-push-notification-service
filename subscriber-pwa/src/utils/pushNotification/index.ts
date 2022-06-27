@@ -1,5 +1,4 @@
-import { subscriptionUrl } from "../../constants";
-import axios from "axios";
+import { axiosInstance } from "../../constants";
 export const urlBase64ToUint8Array = (base64String: string) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -39,7 +38,7 @@ export const saveSubscriptionToServer = async (
   signature: string
 ) => {
   try {
-    await axios.put(subscriptionUrl, {
+    await axiosInstance.put("/notification-subscription", {
       subscription,
       signature,
     });

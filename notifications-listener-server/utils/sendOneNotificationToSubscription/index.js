@@ -1,14 +1,10 @@
 const NotificationSubscription = require("../../models/NotificationSubscription");
-const {
-  APPLICATION_SERVER_PRIVATE_KEY,
-  APPLICATION_SERVER_PUBLIC_KEY,
-} = require("../../secrets");
 const webpush = require("web-push");
 
 webpush.setVapidDetails(
   "mailto:mailvaibhavchopra@gmail.com",
-  APPLICATION_SERVER_PUBLIC_KEY,
-  APPLICATION_SERVER_PRIVATE_KEY
+  process.env.APPLICATION_PUBLIC_KEY,
+  process.env.APPLICATION_PRIVATE_KEY
 );
 
 const sendOneNotificationToSubscription = async (subscriptionDoc, data) => {
