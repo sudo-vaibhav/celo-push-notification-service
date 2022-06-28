@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cpns-channel-manager
+  name: cpns-subscriber
 spec:
   replicas: 1
   selector:
     matchLabels:
       type: frontend
-      service: cpns-channel-manager
+      service: cpns-subscriber
   template:
     metadata:
       labels:
         type: frontend
-        service: cpns-channel-manager
+        service: cpns-subscriber
     spec:
       containers:
         - name: frontend
-          image: vaibhavchopra/cpns-channel-manager:latest
+          image: vaibhavchopra/cpns-subscriber:latest
           imagePullPolicy: Always
           resources:
             limits:
@@ -27,12 +27,12 @@ spec:
               memory: 200Mi
           readinessProbe:
             httpGet:
-              path: /channel-manager
+              path: /subscriber
               port: 80
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /channel-manager
+              path: /subscriber
               port: 80
           ports:
             - containerPort: 80
@@ -41,28 +41,28 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cpns-channel-manager
+  name: cpns-subscriber
 spec:
   ports:
     - port: 80
   selector:
     type: frontend
-    service: cpns-channel-manager
+    service: cpns-subscriber
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cpns-channel-manager-ingress
+  name: cpns-subscriber-ingress
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway
 spec:
   rules:
     - http:
         paths:
-          - path: /channel-manager*
+          - path: /subscriber*
             pathType: Prefix
             backend:
               service:
-                name: cpns-channel-manager
+                name: cpns-subscriber
                 port:
                   number: 80
