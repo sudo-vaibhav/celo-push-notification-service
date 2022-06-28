@@ -7,7 +7,11 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install --production
 # Copy app files
-COPY . .
+COPY ./src src
+COPY ./public public
+COPY [ "craco.config.js", "tsconfig.json", "tailwind.config.js", "./" ]
+
+RUN ls -la .
 # Build the app
 RUN yarn build
 # Bundle static assets with nginx
