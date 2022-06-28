@@ -6,7 +6,7 @@ export const BOTTOM_NAVIGATOR_MARGIN_BOTTOM = 100;
 export const BOTTOM_NAVIGATOR_MIN_HEIGHT_STRING = `calc(99vh - ${BOTTOM_NAVIGATOR_MARGIN_BOTTOM}px)`;
 
 const baseURL = window.location.href.includes("300") ? "http://localhost:8000/" :
-  "https://cpns.azurewebsites.net/notification-subscription";
+  "/api";
 export const axiosInstance = axios.create({
   baseURL,
 })

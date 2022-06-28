@@ -2,6 +2,7 @@
   "name": "celo-push-notification-service",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/subscriber",
   "dependencies": {
     "@celo-tools/use-contractkit": "^1.0.6",
     "@craco/craco": "^6.1.2",

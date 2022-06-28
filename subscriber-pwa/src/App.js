@@ -1,7 +1,7 @@
 import "@celo-tools/use-contractkit/lib/styles.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BottomNavigator from "./components/Layout/BottomNavigator";
 import Channels from "./views/Channels/";
 import Notifications from "./views/Notifications";
@@ -20,7 +20,7 @@ const App = () => {
         url: "https://celopns.web.app",
       }}
     >
-      <Router>
+      <BrowserRouter basename="/subscriber">
         <div style={{ marginBottom: BOTTOM_NAVIGATOR_MARGIN_BOTTOM }}>
           <Switch>
             <Route exact path="/" component={Onboarding} />
@@ -35,7 +35,7 @@ const App = () => {
           </Switch>
         </div>
         <ToastContainer position="bottom-right" />
-      </Router>
+      </BrowserRouter>
     </ContractKitProvider>
   );
 };
