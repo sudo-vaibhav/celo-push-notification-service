@@ -1,4 +1,7 @@
 FROM node:12
 WORKDIR /workspace
-CMD npm install && npm run dev
-
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 8000
+CMD [ "npm", "run","start" ]

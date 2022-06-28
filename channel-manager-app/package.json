@@ -2,6 +2,7 @@
   "name": "channel-manager-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/channel-manager",
   "dependencies": {
     "@celo-tools/use-contractkit": "^1.0.6",
     "@celo/contractkit": "^1.2.4",

@@ -1,10 +1,11 @@
 const NotificationSubscription = require("../../models/NotificationSubscription");
 const webpush = require("web-push");
+const { FALLBACK_VAPID_SUBJECT, FALLBACK_APPLICATION_PUBLIC_KEY, FALLBACK_APPLICATION_PRIVATE_KEY } = require("../../constants");
 
 webpush.setVapidDetails(
-  "mailto:mailvaibhavchopra@gmail.com",
-  process.env.APPLICATION_PUBLIC_KEY,
-  process.env.APPLICATION_PRIVATE_KEY
+  process.env.VAPID_SUBJECT || FALLBACK_VAPID_SUBJECT,
+  process.env.APPLICATION_PUBLIC_KEY || FALLBACK_APPLICATION_PUBLIC_KEY,
+  process.env.APPLICATION_PRIVATE_KEY || FALLBACK_APPLICATION_PRIVATE_KEY
 );
 
 const sendOneNotificationToSubscription = async (subscriptionDoc, data) => {

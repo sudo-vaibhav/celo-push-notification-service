@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Layout/Navbar";
 import { ContractKitProvider } from "@celo-tools/use-contractkit";
 import { ALLOWED_NETWORK, HEADER_MARGIN_TOP } from "./constants";
@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "@celo-tools/use-contractkit/lib/styles.css";
 function App() {
   return (
-    <Router>
+    <BrowserRouter basename="/channel-manager">
       <ContractKitProvider
         dapp={{
           name: "CPNS Admin Panel",
@@ -32,7 +32,7 @@ function App() {
         </div>
         <ToastContainer position="bottom-right" />
       </ContractKitProvider>
-    </Router>
+    </BrowserRouter>
   );
 }
 

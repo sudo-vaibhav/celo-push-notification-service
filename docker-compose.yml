@@ -4,14 +4,11 @@ services:
   backend:
     build:
       context: ./notifications-listener-server
+      dockerfile: ComposeDockerfile
     depends_on:
       - db
     volumes:
       - ./notifications-listener-server:/workspace
-    environment:
-      - DB_URL=mongodb://db:27017/myapp
-      - APPLICATION_PUBLIC_KEY=BEOqsyejO_Q48F7tu2E-TPsN7_eMzFcENihnOh7TWhb1mU7guXMDzHsbVkgV3ejdIs3N7ZZNEt1QC580yZ3VguE
-      - APPLICATION_PRIVATE_KEY=GiMPLX5je9XI2KRPJrYkxFFwzjPIwcdGaTRwmF_3Q9c
     ports:
       - 8000:8000
   db:
@@ -24,6 +21,7 @@ services:
   subscriber:
     build:
       context: ./subscriber-pwa
+      dockerfile: ComposeDockerfile
     volumes:
       - ./subscriber-pwa:/app
     ports:
@@ -34,6 +32,7 @@ services:
   channel-manager:
     build:
       context: ./channel-manager-app
+      dockerfile: ComposeDockerfile
     volumes:
       - ./channel-manager-app:/app
     ports:

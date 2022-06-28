@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpns-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: backend
+      service: cpns-backend
+  template:
+    metadata:
+      labels:
+        type: backend
+        service: cpns-backend
+    spec:
+      containers:
+        - name: backend
+          image: vaibhavchopra/cpns-backend:latest
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          env:
+            - name: DB_URL
+              value: mongodb://cpns-db:27017/cpns
+          readinessProbe:
+            httpGet:
+              path: /public-key
+              port: 8000
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /public-key
+              port: 8000
+          ports:
+            - containerPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpns-backend
+spec:
+  ports:
+    - port: 8000
+  selector:
+    type: backend
+    service: cpns-backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cpns-backend-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/*
+            pathType: Prefix
+            backend:
+              service:
+                name: cpns-backend
+                port:
+                  number: 8000
