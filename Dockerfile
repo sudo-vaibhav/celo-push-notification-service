@@ -3,11 +3,12 @@ ENV NODE_ENV production
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies
-COPY package.json .
-COPY yarn.lock .
+COPY ./channel-manager-app/package.json .
+COPY ./channel-manager-app/yarn.lock .
 RUN yarn install --production
 # Copy app files
-COPY . .
+COPY ./channel-manager-app/. .
+RUN ls 
 # Build the app
 RUN yarn build
 # Bundle static assets with nginx
