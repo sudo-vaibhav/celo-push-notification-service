@@ -65,7 +65,7 @@ spec:
     - host: cdd40854e01441e1a018.centralindia.aksapp.io
       http:
         paths:
-          - path: /*
+          - path: /subscriber*
             pathType: Prefix
             backend:
               service:
