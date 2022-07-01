@@ -9,7 +9,7 @@ metadata:
 spec:
   rules:
     - host: vaibhavk8s.centralindia.cloudapp.azure.com
-      http:
+      http: &http_rules
         paths:
           - path: /subscriber*
             pathType: Prefix
@@ -32,8 +32,10 @@ spec:
                 name: cpns-backend
                 port:
                   number: 8000
+    - host: k8s.vaibhavchopra.ml
+      http: *http_rules
   tls:
     - hosts:
         - vaibhavk8s.centralindia.cloudapp.azure.com
-        # - k8s.vaibhavchopra.ml
+        - k8s.vaibhavchopra.ml
       secretName: "cpns-ingress-tls"
