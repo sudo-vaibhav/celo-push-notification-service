@@ -1,4 +1,4 @@
-const { FALLBACK_PORT, FALLBACK_APPLICATION_PUBLIC_KEY, FALLBACK_DB_URL } = require("./constants");
+const { FALLBACK_PORT, FALLBACK_DB_URL } = require("./constants");
 const PORT = process.env.PORT || FALLBACK_PORT;
 const express = require("express");
 require("express-async-errors");
@@ -9,9 +9,8 @@ app.use(express.json());
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const listenForNotifications = require("./utils/listenForNotifications");
-const notificationSubscription = require("./controllers/notificationSubscription");
-const recoverAddressFromSignature = require("./utils/recoverAddressFromSignature");
 const NotificationSubscription = require("./models/NotificationSubscription");
+const rootRouter = require("./controllers")
 app.use(morgan("dev"));
 mongoose
   .connect(process.env.DB_URL || FALLBACK_DB_URL, {
@@ -22,17 +21,8 @@ mongoose
   .then(async () => {
     console.log("connected to DB");
     await NotificationSubscription.init()
-    app.use(
-      "/notification-subscription",
-      recoverAddressFromSignature,
-      notificationSubscription
-    );
 
-    app.use("/public-key", (req, res) => {
-      return res.send({
-        publicKey: process.env.APPLICATION_PUBLIC_KEY || FALLBACK_APPLICATION_PUBLIC_KEY
-      })
-    })
+    app.use("/api", rootRouter);
 
     app.listen(PORT, () => {
       listenForNotifications();
