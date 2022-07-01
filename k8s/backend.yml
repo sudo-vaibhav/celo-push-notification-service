@@ -30,12 +30,12 @@ spec:
               value: mongodb://cpns-db:27017/cpns
           readinessProbe:
             httpGet:
-              path: /api/public-key
+              path: /api/public-key/
               port: 8000
-            periodSeconds: 5
+            periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/public-key
+              path: /api/public-key/
               port: 8000
           ports:
             - containerPort: 8000

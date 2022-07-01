@@ -35,5 +35,5 @@ spec:
   tls:
     - hosts:
         - vaibhavk8s.centralindia.cloudapp.azure.com
-        - k8s.vaibhavchopra.ml
+        # - k8s.vaibhavchopra.ml
       secretName: "cpns-ingress-tls"
